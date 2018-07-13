@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaishengit.mapper.StudentMapper">
+
+    <cache/>
+    <!-- parameterType为基本类型时可省略 -->
+
+    <select id="findWithSchoolByIdForAs" resultType="com.kaishengit.entity.Student" parameterType="int">
+        SELECT
+            student.id,
+            stu_name,
+            sch_id,
+            school.id AS 'school.id',
+            school.sch_name AS 'school.schName'
+        FROM
+            student
+        INNER JOIN school ON student.sch_id = school.id
+        WHERE
+            student.id = #{id};
+    </select>
+
+    <resultMap id="baseMap" type="com.kaishengit.entity.Student">
+        <id column="id" property="id"/>
+        <result column="stu_name" property="stuName"/>
+        <result column="sch_id" property="schId"/>
+    </resultMap>
+
+    <resultMap id="studentMap" type="com.kaishengit.entity.Student" extends="baseMap">
+    <association property="school" javaType="com.kaishengit.entity.School">
+            <id column="sch_id" property="id"/>
+            <result column="sch_name" property="schName"/>
+        </association>
+    </resultMap>
+    <select id="findWithSchoolByIdForMap" resultMap="studentMap" parameterType="int">
+        SELECT
+            student.id,
+            stu_name,
+            sch_id,
+            sch_name
+        FROM
+            student
+        INNER JOIN school ON student.sch_id = school.id
+        WHERE
+            student.id = #{id};
+    </select>
+
+    <resultMap id="tagMap" type="com.kaishengit.entity.Student" extends="studentMap">
+        <collection property="tagList" ofType="com.kaishengit.entity.Tag">
+            <id column="tag_id" property="id"/>
+            <result column="tag_name" property="tagName"/>
+        </collection>
+    </resultMap>  
+    <select id="findWithTagById" resultMap="tagMap" parameterType="int">
+        SELECT
+            student.id,
+            stu_name,
+            sch_id,
+            sch_name,
+            tag.id AS 'tag_id',
+            tag_name
+        FROM
+            student
+        INNER JOIN school ON student.sch_id = school.id
+        LEFT JOIN stu_tag ON student.id = stu_tag.stu_id
+        LEFT JOIN tag ON tag.id = stu_tag.tag_id
+        WHERE
+            student.id = #{id};
+    </select>
+
+    <insert id="addBatchTag" parameterType="list">
+        insert into tag (tag_name) values
+        <foreach collection="tagList" separator="," item="tag">
+            (#{tag.tagName})
+        </foreach>
+    </insert>
+
+</mapper>
