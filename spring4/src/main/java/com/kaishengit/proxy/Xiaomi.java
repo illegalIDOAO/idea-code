@@ -6,9 +6,15 @@ package com.kaishengit.proxy;
  */
 public class Xiaomi implements Sale{
 
-
     @Override
     public void sale() {
-        System.out.println("小米出貨");
+        System.out.println("小米厂家出貨");
     }
+
+    @Override
+    public int price(){
+        System.out.println("小米出厂价1000");
+        return 1000;
+    }
+
 }

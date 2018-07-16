@@ -1,7 +1,5 @@
 package com.kaishengit.proxy.jdk;
 
-import com.kaishengit.proxy.Sale;
-
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 

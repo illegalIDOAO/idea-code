@@ -7,4 +7,5 @@ package com.kaishengit.proxy;
 public interface Sale {
 
     void sale();
+    int price();
 }
