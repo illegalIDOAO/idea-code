@@ -4,9 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kaishengit.mapper.StudentMapper">
 
+    <!--开启二级缓存-->
     <cache/>
-    <!-- parameterType为基本类型时可省略 -->
 
+    <!-- parameterType为单个是可省略，但一般只在基本数据类型时偷懒省略，集合或者自定义时不省略，为了见名知意-->
     <select id="findWithSchoolByIdForAs" resultType="com.kaishengit.entity.Student" parameterType="int">
         SELECT
             student.id,
@@ -28,7 +29,7 @@
     </resultMap>
 
     <resultMap id="studentMap" type="com.kaishengit.entity.Student" extends="baseMap">
-    <association property="school" javaType="com.kaishengit.entity.School">
+        <association property="school" javaType="com.kaishengit.entity.School">
             <id column="sch_id" property="id"/>
             <result column="sch_name" property="schName"/>
         </association>
