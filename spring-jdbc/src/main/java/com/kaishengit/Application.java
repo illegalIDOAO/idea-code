@@ -45,7 +45,7 @@ public class Application {
         return jdbcTemplate;
     }
 
-    //@Bean//在使用xml配置加载时，此处@注解需要去掉，否则会报错
+    @Bean//在使用xml配置加载时，此处@注解需要去掉，否则会报错
     public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource){
         DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
         dataSourceTransactionManager.setDataSource(dataSource);

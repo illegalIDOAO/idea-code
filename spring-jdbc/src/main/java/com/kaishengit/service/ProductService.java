@@ -37,9 +37,4 @@ public class ProductService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public int save(Product product){
-        return productDao.save(product);
-    }
-
 }

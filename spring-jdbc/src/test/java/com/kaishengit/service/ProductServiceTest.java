@@ -33,12 +33,4 @@ public class ProductServiceTest extends BaseTestCase {
         //productService.saveList2(productList);
     }
 
-    @Test
-    public void testSave(){
-        Product product = new Product();
-        product.setProductName("内存");
-        product.setProductInventory(100);
-        productService.save(product);
-    }
-
 }
