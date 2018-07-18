@@ -39,19 +39,18 @@ public class StudentMapperTestCase {
 
     @Test
     public void testFindWithSchoolByIdForAs(){
-        Student student = studentMapper.findWithSchoolByIdForAs(5);
+        Student student = studentMapper.findWithSchoolByIdForAs(6);
         logger.debug("student:{}",student);
         sqlSession.close();
 
         SqlSession sqlSession2 = MybatisUtil.getSqlSession();
         StudentMapper studentMapper2 = sqlSession2.getMapper(StudentMapper.class);
-        Student Student2 = studentMapper2.findWithSchoolByIdForAs(5);
+        Student Student2 = studentMapper2.findWithSchoolByIdForAs(6);
         sqlSession2.close();
     }
 
     @Test
     public void testFindWithSchoolByIdForMap() {
-
         Student student = studentMapper.findWithSchoolByIdForMap(6);
         logger.debug("student:{}", student);
     }

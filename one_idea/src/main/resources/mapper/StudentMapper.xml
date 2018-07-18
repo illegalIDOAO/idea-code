@@ -22,6 +22,7 @@
             student.id = #{id};
     </select>
 
+    <!--map继承-->
     <resultMap id="baseMap" type="com.kaishengit.entity.Student">
         <id column="id" property="id"/>
         <result column="stu_name" property="stuName"/>
