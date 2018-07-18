@@ -39,6 +39,7 @@
 
         <table tableName="product"/>
 
+
     </context>
 
 </generatorConfiguration>

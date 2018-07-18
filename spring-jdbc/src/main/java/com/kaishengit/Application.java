@@ -2,11 +2,12 @@ package com.kaishengit;
 
 import javafx.beans.property.Property;
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan
 @EnableAspectJAutoProxy
+@EnableTransactionManagement()
 @PropertySource("config.properties")
 public class Application {
 
@@ -43,6 +45,14 @@ public class Application {
         return jdbcTemplate;
     }
 
+    //@Bean//在使用xml配置加载时，此处@注解需要去掉，否则会报错
+    public DataSourceTransactionManager dataSourceTransactionManager(DataSource dataSource){
+        DataSourceTransactionManager dataSourceTransactionManager = new DataSourceTransactionManager();
+        dataSourceTransactionManager.setDataSource(dataSource);
+        return dataSourceTransactionManager;
+    }
+
+
     /*public void init(){
         Properties properties = new Properties();
         try {
@@ -56,4 +66,6 @@ public class Application {
         }
     }*/
 
+
 }
+

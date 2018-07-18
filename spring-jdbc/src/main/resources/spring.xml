@@ -18,10 +18,6 @@
         <property name="url" value="${jdbc.url}"/>
         <property name="username" value="${jdbc.username}"/>
         <property name="password" value="${jdbc.password}"/>
-        <!--<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql:///mydb6"/>
-        <property name="username" value="root"/>
-        <property name="password" value="czh"/>-->
         <!--<property name="initialSize" value="5"/>
         <property name="maxIdle" value="10"/>
         <property name="minIdle" value="5"/>

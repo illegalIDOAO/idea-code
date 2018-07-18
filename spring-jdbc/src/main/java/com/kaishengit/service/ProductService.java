@@ -18,7 +18,7 @@ public class ProductService {
     @Autowired
     private ProductDao productDao;
 
-/*    @Transactional(rollbackFor = RuntimeException.class)
+    @Transactional(rollbackFor = RuntimeException.class)
     public void saveList(List<Product> productList) throws Exception {
         try{
             for(Product product : productList){
@@ -26,14 +26,20 @@ public class ProductService {
             }
         }catch(RuntimeException e){
             //测试验证rallbackFor=RuntimeException.class(默认)时会导致事务失败
-            throw  new  Exception();
+            throw new Exception();
         }
-    }*/
+    }
 
     @Transactional(rollbackFor = Exception.class)
-    public void saveList(List<Product> productList){
+    public void saveList2(List<Product> productList){
         for(Product product : productList){
             productDao.save(product);
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int save(Product product){
+        return productDao.save(product);
+    }
+
 }

@@ -30,6 +30,15 @@ public class ProductServiceTest extends BaseTestCase {
         List<Product> productList = Arrays.asList(product1,product2);
 
         productService.saveList(productList);
+        //productService.saveList2(productList);
+    }
+
+    @Test
+    public void testSave(){
+        Product product = new Product();
+        product.setProductName("内存");
+        product.setProductInventory(100);
+        productService.save(product);
     }
 
 }
