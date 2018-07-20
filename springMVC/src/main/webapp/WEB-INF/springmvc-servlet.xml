@@ -13,6 +13,9 @@
     <!--开启基于注解的mvc-->
     <mvc:annotation-driven/>
 
+    <!--<mvc:default-servlet-handler/>-->
+    <mvc:resources mapping="/static/**" location="/static/"/>
+
     <!--视图解析器-->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
         <!--支持jstl-->
