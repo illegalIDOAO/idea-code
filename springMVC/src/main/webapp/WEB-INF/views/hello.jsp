@@ -12,5 +12,9 @@
 </head>
 <body>
     <h1>hello</h1>
+
+    <form action="/user/hello" method="get">
+        <button>提交</button>
+    </form>
 </body>
 </html>

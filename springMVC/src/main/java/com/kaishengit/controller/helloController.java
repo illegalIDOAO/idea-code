@@ -15,7 +15,7 @@ import javax.xml.ws.RequestWrapper;
 @Controller
 public class helloController {
 
-    @RequestMapping(value = "/hello", method = {RequestMethod.GET,RequestMethod.POST})
+    //@RequestMapping(value = "/hello", method = {RequestMethod.GET,RequestMethod.POST})
     //@PostMapping("/hello")
     //@GetMapping("/hello")
     public String hello(){

@@ -7,6 +7,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
 
@@ -141,6 +146,41 @@ public class UserController {
                 new User("张三","123")
         );
         return userList;
+    }
+
+
+    @GetMapping("/http")
+    public String http(HttpSession session,HttpServletRequest request, HttpServletResponse response,
+                       @RequestHeader(name = "user-Agent") String userAgent){
+
+        System.out.println(userAgent);
+
+        //通过request获得session和context
+        HttpSession session1 = request.getSession();
+        ServletContext context = request.getServletContext();
+
+        User user = new User("tom","123");
+        session.setAttribute("user",user);
+        User user1 = (User) session.getAttribute("user");
+        System.out.println(user1);
+
+        Cookie cookie = new Cookie("name",user1.getUsername());
+        cookie.setDomain("localhost");
+        cookie.setMaxAge(60 * 60);
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        response.addCookie(cookie);
+
+        return "hello";
+    }
+
+    @GetMapping("/hello")
+    public String getCookie(@CookieValue String name, @RequestHeader(name = "user-Agent") String userAgent){
+
+        System.out.println(name);
+
+        System.out.println(userAgent);
+        return "hello";
     }
 
 }
