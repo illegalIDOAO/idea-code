@@ -20,7 +20,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan
 @EnableAspectJAutoProxy
-@EnableTransactionManagement()
+//@EnableTransactionManagement
 @PropertySource("config.properties")
 public class Application {
 

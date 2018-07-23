@@ -29,7 +29,7 @@ public class ProductServiceTest extends BaseTestCase {
 
         List<Product> productList = Arrays.asList(product1,product2);
 
-        productService.saveList(productList);
+        productService.saveList2(productList);
         //productService.saveList2(productList);
     }
 
