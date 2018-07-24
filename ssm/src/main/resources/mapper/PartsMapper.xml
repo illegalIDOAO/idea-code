@@ -118,7 +118,7 @@
       #{inPrice,jdbcType=DECIMAL}, #{salePrice,jdbcType=DECIMAL}, #{inventory,jdbcType=INTEGER}, 
       #{typeId,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.kaishengit.entity.Parts">
+  <insert id="insertSelective" parameterType="com.kaishengit.entity.Parts" useGeneratedKeys="true" keyProperty="id">
     insert into parts
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -179,7 +179,34 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+
+    <resultMap id="PartsWithTypeMap" type="com.kaishengit.entity.Parts" extends="BaseResultMap">
+      <association property="type" javaType="com.kaishengit.entity.Type" column="type_id">
+        <id column="type_id" property="id"/>
+        <result column="type_name" property="typeName"/>
+      </association>
+    </resultMap>
+    <select id="findPage" resultMap="PartsWithTypeMap">
+      select p.*, t.type_name from parts p, type t where p.type_id = t.id
+    </select>
+
+    <select id="findPageByKey" resultMap="PartsWithTypeMap">
+      select p.*,t.type_name
+      from parts p
+      left join type t
+      on p.type_id = t.id
+      <where>
+        <if test="partsName != null and partsName != ''">
+          and parts_name like concat('%',#{partsName},'%')
+        </if>
+        <if test="typeId != null and typeId != ''">
+          and type_id = #{typeId}
+        </if>
+      </where>
+
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map">
     update parts
     <set>
       <if test="record.id != null">

@@ -1,7 +1,9 @@
 package com.kaishengit.service;
 
+import com.github.pagehelper.PageInfo;
 import com.kaishengit.entity.Parts;
-import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 /**
  * @Author: chuzhaohui
@@ -15,4 +17,38 @@ public interface PartsService {
     * @return parts对象
     */
     Parts findParsById(int id);
+
+    /**
+     *  分页查询parts
+     *
+     * @param pageNo
+     * @param map
+     * @return PageInfo对象
+     */
+    PageInfo<Parts> findPage(Integer pageNo, Map<String,Object> map);
+
+
+    /**
+     * 根据主键删除
+     * @param id
+     */
+    void delect(int id);
+
+    /**
+     * 入库新增
+     * @param parts
+     */
+    void partsNew(Parts parts);
+
+    /**
+     * 修改
+     * @param parts
+     */
+    void partsEdit(Parts parts);
+
+    /**
+     * 坚持partsNo是否可用
+     * @param partsNo
+     */
+    void check(String partsNo);
 }

@@ -3,6 +3,8 @@ package com.kaishengit.mapper;
 import com.kaishengit.entity.Parts;
 import com.kaishengit.entity.PartsExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface PartsMapper {
@@ -27,4 +29,8 @@ public interface PartsMapper {
     int updateByPrimaryKeySelective(Parts record);
 
     int updateByPrimaryKey(Parts record);
+
+    List<Parts> findPage();
+
+    List<Parts> findPageByKey(Map<String,Object> map);
 }

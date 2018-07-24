@@ -38,14 +38,27 @@ public class Parts implements Serializable {
     private Integer inventory;
 
     /**
-     * 类型
+     * 进货地址
+     */
+    private String address;
+
+    /**
+     * 类型id
      */
     private Integer typeId;
 
     /**
-     * 进货地址
+     * 类型
      */
-    private String address;
+    private Type type;
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
 
     private static final long serialVersionUID = 1L;
 
@@ -152,20 +165,16 @@ public class Parts implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", partsNo=").append(partsNo);
-        sb.append(", partsName=").append(partsName);
-        sb.append(", inPrice=").append(inPrice);
-        sb.append(", salePrice=").append(salePrice);
-        sb.append(", inventory=").append(inventory);
-        sb.append(", typeId=").append(typeId);
-        sb.append(", address=").append(address);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return "Parts{" +
+                "id=" + id +
+                ", partsNo='" + partsNo + '\'' +
+                ", partsName='" + partsName + '\'' +
+                ", inPrice=" + inPrice +
+                ", salePrice=" + salePrice +
+                ", inventory=" + inventory +
+                ", address='" + address + '\'' +
+                ", typeId=" + typeId +
+                ", type=" + type +
+                '}';
     }
 }
