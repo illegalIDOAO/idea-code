@@ -35,6 +35,7 @@
                 <div class="box-body">
                     <form class="form-inline pull-left" action="/parts/list">
                         <input type="text" name="partsName" value="${param.partsName}" placeholder="配件名称" class="form-control">
+                        <input type="text" name="inventory" value="${param.inventory}" placeholder="库存上限(数字有效)" class="form-control">
                         <select class="form-control" name="partsType" id="partsType">
                             <option value="">请选择配件类型</option>
                             <c:forEach items="${typeList}" var="type" >
@@ -65,7 +66,7 @@
                         <tbody>
                         <c:forEach items="${page.list}" var="parts">
                             <tr>
-                                <td>${parts.partsNo}</td>
+                                <td><a href="/parts/${parts.id}/detail">${parts.partsNo}</a></td>
                                 <td>${parts.partsName}</td>
                                 <td>${parts.inventory}</td>
                                 <td>${parts.inPrice}</td>
@@ -105,9 +106,6 @@
         if(message){
             layer.msg(message);
         }
-        if(message) {
-            layer.msg(message);
-        }
 
         $(".delete").click(function(){
             var id = $(this).attr("ref");
@@ -124,7 +122,7 @@
             prev:'上一页',
             next:'下一页',
             href:"?p={{number}}&partsName=" + encodeURIComponent("${param.partsName}")
-            + "&partsType=${param.partsType}"
+            + "&inventory=${param.inventory}&partsType=${param.partsType}"
         });
 
         var locale = {
@@ -160,9 +158,6 @@
 
             $('#time').val(start.format('YYYY-MM-DD') + " / " + end.format('YYYY-MM-DD'));
         });
-
-
-
 
     })
 </script>

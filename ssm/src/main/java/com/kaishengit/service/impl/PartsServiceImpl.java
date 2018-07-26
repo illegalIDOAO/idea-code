@@ -19,7 +19,7 @@ import java.util.Map;
  * @Date: Created in 21:36 2018/7/23
  */
 @Service
-class parts implements PartsService {
+public class PartsServiceImpl implements PartsService {
 
     @Autowired
     private PartsMapper partsMapper;
@@ -46,7 +46,6 @@ class parts implements PartsService {
     public PageInfo<Parts> findPage(Integer pageNo, Map<String,Object> map) {
         PageHelper.startPage(pageNo,Constant.DEFAULT_PAGE_SIZE);
 
-
         List<Parts> parts = partsMapper.findPageByKey(map);
 
         PageInfo<Parts> partsPageInfo = new PageInfo<>(parts);
@@ -62,6 +61,7 @@ class parts implements PartsService {
     public void delect(int id) {
         partsMapper.deleteByPrimaryKey(id);
 
+        //TODO 以下方法更好
         /*Parts parts = partsMapper.selectByPrimaryKey(id);
         if(parts.getInventory() != 0){
             throw new NotAllowChangeException();

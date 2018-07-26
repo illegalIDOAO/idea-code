@@ -15,4 +15,16 @@ public interface TypeService {
      * @return
      */
     List<Type> findTypes();
+
+    /**
+     * 删除类型
+     * @param id
+     */
+    void typeDel(int id);
+
+    /**
+     * 新增类型
+     * @param typeName
+     */
+    void typeNew(String typeName);
 }

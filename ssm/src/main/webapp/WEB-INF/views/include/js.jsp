@@ -15,3 +15,4 @@
 <script src="/static/plugins/daterangepicker/moment.js"></script>
 <script src="/static/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="/static/plugins/layer/layer.js"></script>
+<script src="/static/plugins/tree/js/jquery.ztree.all.min.js"></script>

@@ -45,8 +45,8 @@
               </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i>配件管理</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i>类型管理</a></li>
+                    <li><a href="/parts/list"><i class="fa fa-circle-o"></i>配件管理</a></li>
+                    <li><a href="/type/list"><i class="fa fa-circle-o"></i>类型管理</a></li>
                     <li><a href="/parts/new"><i class="fa fa-circle-o"></i>配件入库</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i>入库查询</a></li>
                     <li><a href="#"><i class="fa fa-circle-o"></i>出库查询</a></li>
@@ -81,7 +81,7 @@
 
             <li class="header">系统管理</li>
             <!-- 部门员工管理 -->
-            <li><a href="#"><i class="fa fa-users"></i> <span>员工管理</span></a></li>
+            <li><a href="/employee/list"><i class="fa fa-users"></i> <span>员工管理</span></a></li>
         </ul>
     </section>
     <!-- /.sidebar -->

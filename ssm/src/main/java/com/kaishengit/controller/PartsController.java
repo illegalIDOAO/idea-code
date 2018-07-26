@@ -8,6 +8,8 @@ import com.kaishengit.exception.NotAllowException;
 import com.kaishengit.exception.NotFountException;
 import com.kaishengit.service.PartsService;
 import com.kaishengit.service.TypeService;
+import org.apache.commons.lang3.StringUtils;
+import org.omg.PortableInterceptor.Interceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,18 +37,24 @@ public class PartsController {
     @GetMapping("/list")
     public String list(@RequestParam(name = "p",defaultValue = "1") Integer pageNo,
                        @RequestParam(required = false) String partsName,
+                       @RequestParam(required = false) String inventory,
                        @RequestParam(required = false) Integer partsType,
                        Model model){
+        if(!StringUtils.isNumeric(inventory)){
+            inventory = Integer.toString(10000);
+        }else{
+            inventory = Integer.toString(Integer.parseInt(inventory) + 1);
+        }
+        Map<String, Object> map = new HashMap<>();
+        map.put("partsName", partsName);
+        map.put("inventory", inventory);
+        map.put("typeId", partsType);
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("partsName",partsName);
-        map.put("typeId",partsType);
-
-        PageInfo<Parts> page = partsService.findPage(pageNo,map);
+        PageInfo<Parts> page = partsService.findPage(pageNo, map);
         List<Type> typeList = typeService.findTypes();
 
-        model.addAttribute("page",page);
-        model.addAttribute("typeList",typeList);
+        model.addAttribute("page", page);
+        model.addAttribute("typeList", typeList);
         return "parts/list";
     }
 
@@ -77,8 +85,12 @@ public class PartsController {
 
     @GetMapping("/{id:\\d+}/del")
     public String partsDel(@PathVariable Integer id,RedirectAttributes redirectAttributes){
-        partsService.delect(id);
-        redirectAttributes.addFlashAttribute("message","删除成功");
+        try{
+            partsService.delect(id);
+            redirectAttributes.addFlashAttribute("message","删除成功");
+        } catch (NotAllowException e){
+            redirectAttributes.addFlashAttribute("message","删除失败，该部件有库存");
+        }
         return "redirect:/parts/list";
     }
 
@@ -100,8 +112,8 @@ public class PartsController {
     }
 
 
-    @GetMapping("/detail")
-    public String detail(int id, Model model) throws IOException {
+    @GetMapping("/{id:\\d+}/detail")
+    public String detail(@PathVariable int id, Model model) throws IOException {
         Parts parts = partsService.findParsById(id);
 
         if(parts == null){

@@ -112,11 +112,13 @@
                 },
                 inPrice :{
                     required : true,
-                    number : true
+                    number : true,
+                    min: 0
                 },
                 salePrice :{
                     required : true,
-                    number : true
+                    number : true,
+                    min: 0
                 },
                 typeId :{
                     required : true
@@ -139,11 +141,13 @@
                 },
                 inPrice :{
                     required : "请输入进价",
-                    number : "请输入纯数字"
+                    number : "请输入纯数字",
+                    min: $.validator.format( "请输入不小于 {0} 的数值" )
                 },
                 salePrice :{
                     required : "请输入售价",
-                    number : "请输入纯数字"
+                    number : "请输入纯数字",
+                    min: $.validator.format( "请输入不小于 {0} 的数值" )
                 },
                 typeId :{
                     required : "请选择类型"

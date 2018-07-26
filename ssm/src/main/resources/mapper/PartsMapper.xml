@@ -189,18 +189,20 @@
     <select id="findPage" resultMap="PartsWithTypeMap">
       select p.*, t.type_name from parts p, type t where p.type_id = t.id
     </select>
-
     <select id="findPageByKey" resultMap="PartsWithTypeMap">
       select p.*,t.type_name
       from parts p
       left join type t
       on p.type_id = t.id
       <where>
-        <if test="partsName != null and partsName != ''">
-          and parts_name like concat('%',#{partsName},'%')
-        </if>
         <if test="typeId != null and typeId != ''">
           and type_id = #{typeId}
+        </if>
+        <if test="inventory != null and inventory != ''">
+          and inventory &lt; #{inventory}
+        </if>
+        <if test="partsName != null and partsName != ''">
+          and parts_name like concat('%',#{partsName},'%')
         </if>
       </where>
 

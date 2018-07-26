@@ -25,7 +25,7 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="/static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-                        <span class="hidden-xs">李美苏</span>
+                        <span class="hidden-xs"> ${sessionScope.currentEmployee.employeeName}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -33,17 +33,17 @@
                             <img src="/static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                             <p>
-                                李美苏
-                                <small>海外事业部</small>
+                                ${sessionScope.currentEmployee.employeeName}
+                                <small>${sessionScope.currentEmployee.roleId}海外事业部</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="/profile" class="btn btn-default btn-flat">个人设置</a>
+                                <a href="/employee/profile" class="btn btn-default btn-flat">个人设置</a>
                             </div>
                             <div class="pull-right">
-                                <a href="/logout" class="btn btn-default btn-flat">安全退出</a>
+                                <a href="/emlpoyee/logout" class="btn btn-default btn-flat">安全退出</a>
                             </div>
                         </li>
                     </ul>
