@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kaishengit.mapper.EmployeeMapper">
+  <resultMap id="BaseResultMap" type="com.kaishengit.entity.Employee">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="employee_account" jdbcType="VARCHAR" property="employeeAccount" />
+    <result column="employee_name" jdbcType="VARCHAR" property="employeeName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="tel" jdbcType="VARCHAR" property="tel" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, employee_account, employee_name, password, tel, create_time, state
+  </sql>
+  <select id="selectByExample" parameterType="com.kaishengit.entity.EmployeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from employee
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from employee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.kaishengit.entity.EmployeeExample">
+    delete from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.kaishengit.entity.Employee" useGeneratedKeys="true" keyProperty="id">
+    insert into employee (id, employee_account, employee_name, 
+      password, tel, create_time, 
+      state)
+    values (#{id,jdbcType=INTEGER}, #{employeeAccount,jdbcType=VARCHAR}, #{employeeName,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.kaishengit.entity.Employee" useGeneratedKeys="true" keyProperty="id">
+    insert into employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="employeeAccount != null">
+        employee_account,
+      </if>
+      <if test="employeeName != null">
+        employee_name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="tel != null">
+        tel,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="employeeAccount != null">
+        #{employeeAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null">
+        #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.kaishengit.entity.EmployeeExample" resultType="java.lang.Long">
+    select count(*) from employee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+  <resultMap id="employeeWithRoleMap" type="com.kaishengit.entity.Employee" extends="BaseResultMap">
+    <collection property="roleList" ofType="com.kaishengit.entity.Role">
+      <id property="id" column="roleId"/>
+      <result property="updateTime" column="roleUpdateTime"/>
+      <result property="createTime" column="roleCreateTime"/>
+      <result property="roleCode" column="role_code"/>
+      <result property="roleName" column="role_name"/>
+    </collection>
+  </resultMap>
+  <select id="selectEmployeeWithRole" resultMap="employeeWithRoleMap" parameterType="map">
+      SELECT
+            employee.*, role.id AS roleId,
+            role.role_code,
+            role.role_name,
+            role.create_time AS roleCreateTime,
+            role.update_time AS roleUpdateTime
+        FROM
+            employee
+        LEFT JOIN employee_role ON employee.id = employee_role.employee_id
+        LEFT JOIN role ON role.id = employee_role.role_id
+        <where>
+          <if test="account != null and account != ''">
+            employee.employee_account = #{account}
+          </if>
+          <if test="id != null and id != ''">
+            employee.id = #{id}
+          </if>
+        </where>
+  </select>
+  <select id="selectAllEmployeeWithRole" resultMap="employeeWithRoleMap">
+    SELECT
+            employee.*, role.id AS roleId,
+            role.role_code,
+            role.role_name,
+            role.create_time AS roleCreateTime,
+            role.update_time AS roleUpdateTime
+        FROM
+            employee
+        LEFT JOIN employee_role ON employee.id = employee_role.employee_id
+        LEFT JOIN role ON role.id = employee_role.role_id
+        order by employee.state and employee.id
+  </select>
+  <select id="findAllWithRolesByQueryParam" resultMap="employeeWithRoleMap">
+    SELECT
+    employee.*, role.id AS roleId,
+    role.role_code,
+    role.role_name,
+    role.create_time AS roleCreateTime,
+    role.update_time AS roleUpdateTime
+    FROM
+    employee
+    LEFT JOIN employee_role ON employee.id = employee_role.employee_id
+    LEFT JOIN role ON role.id = employee_role.role_id
+    <choose>
+      <when test="roleId != null and roleId != 0">
+        inner JOIN (
+        SELECT id FROM employee
+        INNER JOIN employee_role ON employee_role.employee_id = employee.id
+        <where>
+          employee_role.role_id = #{roleId}
+          <if test="accountNameTel != null and accountNameTel != ''">
+            and(
+            (employee.employee_name like concat('%',#{accountNameTel},'%'))
+            or
+            (employee.employee_account like concat('%',#{accountNameTel},'%'))
+            or
+            (employee.tel like concat('%',#{accountNameTel},'%')))
+          </if>
+        </where>
+        ) AS temp ON employee.id = temp.id
+      </when>
+      <otherwise>
+        <where>
+          <if test="accountNameTel != null and accountNameTel != ''">
+            (employee.employee_name like concat('%',#{accountNameTel},'%'))
+            or
+            (employee.employee_account like concat('%',#{accountNameTel},'%'))
+            or
+            (employee.tel like concat('%',#{accountNameTel},'%'))
+          </if>
+        </where>
+      </otherwise>
+    </choose>
+    order by employee.state,employee.id
+  </select>
+
+
+  <update id="updateByExampleSelective" parameterType="map">
+    update employee
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.employeeAccount != null">
+        employee_account = #{record.employeeAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeName != null">
+        employee_name = #{record.employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tel != null">
+        tel = #{record.tel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update employee
+    set id = #{record.id,jdbcType=INTEGER},
+      employee_account = #{record.employeeAccount,jdbcType=VARCHAR},
+      employee_name = #{record.employeeName,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      tel = #{record.tel,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      state = #{record.state,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kaishengit.entity.Employee">
+    update employee
+    <set>
+      <if test="employeeAccount != null">
+        employee_account = #{employeeAccount,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeName != null">
+        employee_name = #{employeeName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null">
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.kaishengit.entity.Employee">
+    update employee
+    set employee_account = #{employeeAccount,jdbcType=VARCHAR},
+      employee_name = #{employeeName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
