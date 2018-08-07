@@ -3,6 +3,7 @@ package com.kaishengit.service;
 import com.github.pagehelper.PageInfo;
 import com.kaishengit.entity.Parts;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,7 +17,7 @@ public interface PartsService {
     * @param id
     * @return parts对象
     */
-    Parts findParsById(int id);
+    Parts selectParsById(int id);
 
     /**
      *  分页查询parts
@@ -25,7 +26,7 @@ public interface PartsService {
      * @param map
      * @return PageInfo对象
      */
-    PageInfo<Parts> findPage(Integer pageNo, Map<String, Object> map);
+    PageInfo<Parts> selectPage(Integer pageNo, Map<String, Object> map);
 
 
     /**
@@ -60,4 +61,23 @@ public interface PartsService {
      * @param emplyeeId
      */
     void addInventory(Integer partsId, Integer addNum,Integer emplyeeId);
+
+    /**
+     * 查所有配件列表
+     * @return
+     */
+    List<Parts> selectAllParts();
+
+    /**
+     * 查所有配件(带类型信息)列表
+     * @return
+     */
+    List<Parts> selectAllPartsWithType();
+
+    /**
+     * 根据类型id查找配件列表
+     * @param id
+     * @return
+     */
+    List<Parts> findPartsByTypeId(int id);
 }

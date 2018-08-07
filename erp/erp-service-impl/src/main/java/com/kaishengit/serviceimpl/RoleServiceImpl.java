@@ -56,11 +56,13 @@ public class RoleServiceImpl implements RoleService {
     public void newRole(Role role, Integer[] permissionIds) {
         roleMapper.insertSelective(role);
 
-        for(Integer permissionId : permissionIds){
-            RolePermission rolePermission = new RolePermission();
-            rolePermission.setPermissionId(permissionId);
-            rolePermission.setRoleId(role.getId());
-            rolePermissionMapper.insert(rolePermission);
+        if(permissionIds != null){
+            for(Integer permissionId : permissionIds){
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setPermissionId(permissionId);
+                rolePermission.setRoleId(role.getId());
+                rolePermissionMapper.insert(rolePermission);
+            }
         }
     }
 
@@ -118,11 +120,13 @@ public class RoleServiceImpl implements RoleService {
         rolePermissionExample.createCriteria().andRoleIdEqualTo(role.getId());
         rolePermissionMapper.deleteByExample(rolePermissionExample);
 
-        for(Integer permissionId : permissionIds){
-            RolePermission rolePermission = new RolePermission();
-            rolePermission.setRoleId(role.getId());
-            rolePermission.setPermissionId(permissionId);
-            rolePermissionMapper.insert(rolePermission);
+        if(permissionIds != null){
+            for(Integer permissionId : permissionIds){
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setRoleId(role.getId());
+                rolePermission.setPermissionId(permissionId);
+                rolePermissionMapper.insert(rolePermission);
+            }
         }
     }
 }

@@ -27,14 +27,20 @@ public class Car implements Serializable {
     private String carNo;
 
     /**
+     * 车辆颜色
+     */
+    private String color;
+
+    /**
      * 客户ID
      */
     private Integer customerId;
 
     /**
-     * 车辆颜色
+     * 车主，客户
      */
-    private String color;
+    private Customer customer;
+
 
     private static final long serialVersionUID = 1L;
 
@@ -86,6 +92,14 @@ public class Car implements Serializable {
         this.color = color;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -121,18 +135,14 @@ public class Car implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName());
-        sb.append(" [");
-        sb.append("Hash = ").append(hashCode());
-        sb.append(", id=").append(id);
-        sb.append(", carType=").append(carType);
-        sb.append(", licenceNo=").append(licenceNo);
-        sb.append(", carNo=").append(carNo);
-        sb.append(", customerId=").append(customerId);
-        sb.append(", color=").append(color);
-        sb.append(", serialVersionUID=").append(serialVersionUID);
-        sb.append("]");
-        return sb.toString();
+        return "Car{" +
+                "id=" + id +
+                ", carType='" + carType + '\'' +
+                ", licenceNo='" + licenceNo + '\'' +
+                ", carNo='" + carNo + '\'' +
+                ", customerId=" + customerId +
+                ", color='" + color + '\'' +
+                ", customer=" + customer +
+                '}';
     }
 }

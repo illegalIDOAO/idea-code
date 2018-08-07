@@ -9,9 +9,33 @@ import java.util.Date;
  */
 public class Order implements Serializable {
 
-    public static final Integer ORDER_STATE_PENDING = 0;
-    public static final Integer ORDER_STATE_CHECK= 1;
-    public static final Integer ORDER_STATE_ACHIEVE_ = 2;
+    public static final String ORDER_STATE_NEW= "0";
+    public static final String ORDER_STATE_WAITPULL = "1";
+    public static final String ORDER_STATE_FIXING = "2";
+    public static final String ORDER_STATE_WAITCHECK_ = "3";
+    public static final String ORDER_STATE_CHECKING_ = "4";
+    public static final String ORDER_STATE_WAITACCOUNT = "5";
+    public static final String ORDER_STATE_DONE = "6";
+
+    public String getStateMean(){
+        if(getState().equals(ORDER_STATE_NEW)){
+            return "新订单";
+        }else if(getState().equals(ORDER_STATE_WAITPULL)){
+            return "已下发，等待领取";
+        }else if(getState().equals(ORDER_STATE_FIXING)){
+            return "正在处理";
+        }else if(getState().equals(ORDER_STATE_WAITCHECK_)){
+            return "等待质检";
+        }else if(getState().equals(ORDER_STATE_CHECKING_)){
+            return "正在质检";
+        }else if(getState().equals(ORDER_STATE_WAITACCOUNT)){
+            return "待结账";
+        }else if(getState().equals(ORDER_STATE_DONE)){
+            return "已完成";
+        }else{
+            return "UNKNOW";
+        }
+    }
 
     private Integer id;
 
@@ -21,9 +45,9 @@ public class Order implements Serializable {
     private BigDecimal orderMoney;
 
     /**
-     * 订单状态：0待处理，1待结账，2已完成
+     * 订单状态 
      */
-    private Integer state;
+    private String state;
 
     /**
      * 创建时间
@@ -38,7 +62,27 @@ public class Order implements Serializable {
     /**
      * 工时费
      */
-    private Long hourFee;
+    private Integer serviceTypeId;
+
+    public Car getCar() {
+        return car;
+    }
+
+    public void setCar(Car car) {
+        this.car = car;
+    }
+
+    private Car car;
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    private Customer customer;
 
     private static final long serialVersionUID = 1L;
 
@@ -58,11 +102,11 @@ public class Order implements Serializable {
         this.orderMoney = orderMoney;
     }
 
-    public Integer getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Integer state) {
+    public void setState(String state) {
         this.state = state;
     }
 
@@ -82,12 +126,12 @@ public class Order implements Serializable {
         this.carId = carId;
     }
 
-    public Long getHourFee() {
-        return hourFee;
+    public Integer getServiceTypeId() {
+        return serviceTypeId;
     }
 
-    public void setHourFee(Long hourFee) {
-        this.hourFee = hourFee;
+    public void setServiceTypeId(Integer serviceTypeId) {
+        this.serviceTypeId = serviceTypeId;
     }
 
     @Override
@@ -107,7 +151,7 @@ public class Order implements Serializable {
             && (this.getState() == null ? other.getState() == null : this.getState().equals(other.getState()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()))
             && (this.getCarId() == null ? other.getCarId() == null : this.getCarId().equals(other.getCarId()))
-            && (this.getHourFee() == null ? other.getHourFee() == null : this.getHourFee().equals(other.getHourFee()));
+            && (this.getServiceTypeId() == null ? other.getServiceTypeId() == null : this.getServiceTypeId().equals(other.getServiceTypeId()));
     }
 
     @Override
@@ -119,7 +163,7 @@ public class Order implements Serializable {
         result = prime * result + ((getState() == null) ? 0 : getState().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         result = prime * result + ((getCarId() == null) ? 0 : getCarId().hashCode());
-        result = prime * result + ((getHourFee() == null) ? 0 : getHourFee().hashCode());
+        result = prime * result + ((getServiceTypeId() == null) ? 0 : getServiceTypeId().hashCode());
         return result;
     }
 
@@ -134,7 +178,7 @@ public class Order implements Serializable {
         sb.append(", state=").append(state);
         sb.append(", createTime=").append(createTime);
         sb.append(", carId=").append(carId);
-        sb.append(", hourFee=").append(hourFee);
+        sb.append(", serviceTypeId=").append(serviceTypeId);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -117,9 +117,6 @@
                 },
                 roleCode : {
                     required : true
-                },
-                permissionId :{
-                    required : true,
                 }
             },
             messages : {
@@ -129,9 +126,6 @@
                 },
                 roleCode : {
                     required : "请输入角色代号"
-                },
-                permissionId :{
-                    required : "请选择权限"
                 }
             }
         });

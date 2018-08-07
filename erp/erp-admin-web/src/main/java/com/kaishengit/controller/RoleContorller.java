@@ -43,8 +43,9 @@ public class RoleContorller {
     }
 
     @PostMapping("/new")
-    public String newRole(Role role,Integer[] permissionId, RedirectAttributes redirectAttributes){
-        roleService.newRole(role,permissionId);
+    public String newRole(Role role,Integer[] permissionIds, RedirectAttributes redirectAttributes){
+
+        roleService.newRole(role,permissionIds);
         redirectAttributes.addFlashAttribute("message","新增成功");
         return "redirect:/manage/role";
     }

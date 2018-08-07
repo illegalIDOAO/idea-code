@@ -50,7 +50,7 @@ public class PartsController {
         map.put("inventory", inventory);
         map.put("typeId", partsType);
 
-        PageInfo<Parts> page = partsService.findPage(pageNo, map);
+        PageInfo<Parts> page = partsService.selectPage(pageNo, map);
         List<Type> typeList = typeService.findTypes();
 
         model.addAttribute("page", page);
@@ -97,7 +97,7 @@ public class PartsController {
 
     @GetMapping("/{id:\\d+}/edit")
     public String partsEdit(@PathVariable Integer id,Model model){
-        Parts parts = partsService.findParsById(id);
+        Parts parts = partsService.selectParsById(id);
         if(parts == null){
             throw new NotFountException("资源未找到");
         }
@@ -117,7 +117,7 @@ public class PartsController {
 
     @GetMapping("/{id:\\d+}/detail")
     public String detail(@PathVariable int id, Model model) throws IOException {
-        Parts parts = partsService.findParsById(id);
+        Parts parts = partsService.selectParsById(id);
         if(parts == null){
             throw new NotFountException();
         }

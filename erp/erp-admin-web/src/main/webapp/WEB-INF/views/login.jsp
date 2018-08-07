@@ -13,7 +13,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <b>汽车售后服务平台</b>
+        <b>车管家管理平台</b>
     </div>
     <!-- /.login-logo -->
 

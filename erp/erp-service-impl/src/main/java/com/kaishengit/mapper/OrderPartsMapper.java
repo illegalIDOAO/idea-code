@@ -3,6 +3,8 @@ package com.kaishengit.mapper;
 import com.kaishengit.entity.OrderParts;
 import com.kaishengit.entity.OrderPartsExample;
 import java.util.List;
+
+import com.kaishengit.entity.Parts;
 import org.apache.ibatis.annotations.Param;
 
 public interface OrderPartsMapper {
@@ -27,4 +29,6 @@ public interface OrderPartsMapper {
     int updateByPrimaryKeySelective(OrderParts record);
 
     int updateByPrimaryKey(OrderParts record);
+
+    List<Parts> selectPartsListByOrderId(int id);
 }

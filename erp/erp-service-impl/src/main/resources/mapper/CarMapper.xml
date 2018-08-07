@@ -108,7 +108,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.kaishengit.entity.Car">
+  <insert id="insert" parameterType="com.kaishengit.entity.Car" useGeneratedKeys="true" keyProperty="id">
     insert into car (id, car_type, licence_no, 
       car_no, customer_id, color
       )
@@ -116,7 +116,7 @@
       #{carNo,jdbcType=VARCHAR}, #{customerId,jdbcType=INTEGER}, #{color,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.kaishengit.entity.Car">
+  <insert id="insertSelective" parameterType="com.kaishengit.entity.Car" useGeneratedKeys="true" keyProperty="id">
     insert into car
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -165,7 +165,27 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+
+  <resultMap id="CarWithCustomerMap" type="com.kaishengit.entity.Car" extends="BaseResultMap">
+    <association property="customer" javaType="com.kaishengit.entity.Customer">
+      <id property="id" column="customer_id"/>
+      <result property="userName" column="user_name"/>
+      <result property="idCard" column="id_card"/>
+      <result property="tel" column="tel"/>
+    </association>
+  </resultMap>
+    <select id="selectBylicenceNo" resultMap="CarWithCustomerMap">
+      SELECT
+          car.*, c.user_name,
+          c.id_card,
+          c.tel
+      FROM
+          car
+      LEFT JOIN customer c ON car.customer_id = c.id
+      where car.licence_no = #{licenseNo}
+    </select>
+
+    <update id="updateByExampleSelective" parameterType="map">
     update car
     <set>
       <if test="record.id != null">

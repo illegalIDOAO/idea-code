@@ -44,7 +44,7 @@ public class PartsServiceImpl implements PartsService {
      * @return parts对象
      */
     @Override
-    public Parts findParsById(int id) {
+    public Parts selectParsById(int id) {
         Parts parts = partsMapper.selectByPrimaryKey(id);
         Type type  = typeMappper.selectByPrimaryKey(parts.getTypeId());
         parts.setType(type);
@@ -59,7 +59,7 @@ public class PartsServiceImpl implements PartsService {
      * @return PageInfo对象
      */
     @Override
-    public PageInfo<Parts> findPage(Integer pageNo, Map<String,Object> map) {
+    public PageInfo<Parts> selectPage(Integer pageNo, Map<String,Object> map) {
         PageHelper.startPage(pageNo,Constant.DEFAULT_PAGE_SIZE);
 
         List<Parts> parts = partsMapper.findPageByKey(map);
@@ -169,5 +169,39 @@ public class PartsServiceImpl implements PartsService {
         partsStreamMapper.insert(partsStream);
 
         // TODO 添加事务
+    }
+
+    /**
+     * 查所有配件列表
+     *
+     * @return
+     */
+    @Override
+    public List<Parts> selectAllParts() {
+        PartsExample partsExample = new PartsExample();
+        return partsMapper.selectByExample(partsExample);
+    }
+
+    /**
+     * 查所有配件(带类型信息)列表
+     *
+     * @return
+     */
+    @Override
+    public List<Parts> selectAllPartsWithType() {
+        return partsMapper.findPage();
+    }
+
+    /**
+     * 根据类型id查找配件列表
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<Parts> findPartsByTypeId(int id) {
+        PartsExample partsExample = new PartsExample();
+        partsExample.createCriteria().andTypeIdEqualTo(id);
+        return partsMapper.selectByExample(partsExample);
     }
 }

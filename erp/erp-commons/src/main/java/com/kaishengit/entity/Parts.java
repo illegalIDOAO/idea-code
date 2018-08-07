@@ -52,6 +52,20 @@ public class Parts implements Serializable {
      */
     private Type type;
 
+
+    /**
+     * 某订单中使用该配件的数量
+     */
+    private Integer num;
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
+
     public Type getType() {
         return type;
     }
