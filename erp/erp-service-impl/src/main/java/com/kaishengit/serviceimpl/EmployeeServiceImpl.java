@@ -24,9 +24,9 @@ import java.util.Map;
  * @Date: Created in 10:48 2018/7/25
  */
 @Service
-public class EmployServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService {
 
-    private Logger logger = LoggerFactory.getLogger(EmployServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     @Autowired
     private EmployeeMapper employeeMapper;

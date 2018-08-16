@@ -173,6 +173,7 @@
       <result column="car_type" property="carType"/>
       <result column="car_no" property="carNo"/>
       <result column="licence_no" property="licenceNo"/>
+      <result column="color" property="color"/>
     </association>
     <association property="customer" javaType="com.kaishengit.entity.Customer">
       <id column="customer_id" property="id"/>
@@ -216,6 +217,22 @@
     </where>
     order by o.create_time desc
   </select>
+  <select id="selectWihtCarInfo" resultMap="orderWithCarAndCustomerMap">
+      SELECT
+          `order`.*, car.car_type,
+          car.licence_no,
+          car.car_no,
+          car.customer_id,
+          car.color,
+          customer.user_name,
+          customer.id_card,
+          customer.tel
+      FROM
+          `order`
+      LEFT JOIN car ON `order`.car_id = car.id
+      LEFT JOIN customer ON car.customer_id = customer.id
+      where `order`.id = #{id}
+    </select>
   <update id="updateByExampleSelective" parameterType="map">
     update `order`
     <set>

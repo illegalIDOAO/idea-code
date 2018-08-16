@@ -26,7 +26,6 @@ public class PermissionController {
 
     @Autowired
     private MyDynamicFilterChainDefinitions myDynamicFilterChainDefinitions;
-
     @Autowired
     private PermissionService permissionService;
 
@@ -124,8 +123,6 @@ public class PermissionController {
         }
         sourceList.remove(permission);
     }
-
-
 
     @PostMapping("/edit")
     public String edit(Permission permission, RedirectAttributes redirectAttributes){

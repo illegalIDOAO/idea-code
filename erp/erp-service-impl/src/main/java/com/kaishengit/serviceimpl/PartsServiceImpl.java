@@ -2,10 +2,7 @@ package com.kaishengit.serviceimpl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.kaishengit.entity.Parts;
-import com.kaishengit.entity.PartsExample;
-import com.kaishengit.entity.PartsStream;
-import com.kaishengit.entity.Type;
+import com.kaishengit.entity.*;
 import com.kaishengit.exception.NotAllowException;
 import com.kaishengit.mapper.PartsMapper;
 import com.kaishengit.mapper.PartsStreamMapper;
@@ -16,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -36,6 +34,8 @@ public class PartsServiceImpl implements PartsService {
     private PartsStreamMapper partsStreamMapper;
     @Autowired
     private TypeMapper typeMappper;
+    @Autowired
+    private TypeMapper typeMapper;
 
     /**
      * 根据id查找
@@ -93,6 +93,7 @@ public class PartsServiceImpl implements PartsService {
      * @param employeeId
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void partsNew(Parts parts,Integer employeeId) {
         partsMapper.insertSelective(parts);
 
@@ -108,9 +109,7 @@ public class PartsServiceImpl implements PartsService {
         partsStream.setAfterInventory(parts.getInventory());
         partsStream.setCreateTime(new Date());
         partsStream.setType(PartsStream.PARTSSTREAM_TYPE_NEW);
-        partsStreamMapper.insert(partsStream);
-
-        // TODO 添加事务
+        partsStreamMapper.insertSelective(partsStream);
     }
 
     /**
@@ -148,11 +147,12 @@ public class PartsServiceImpl implements PartsService {
      * @param employeeId
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void addInventory(Integer partsId, Integer addNum,Integer employeeId) {
         Parts parts = partsMapper.selectByPrimaryKey(partsId);
         Integer preInventory = parts.getInventory();
         parts.setInventory(addNum + preInventory);
-        partsMapper.updateByPrimaryKey(parts);
+        partsMapper.updateByPrimaryKeySelective(parts);
 
         //记录日志
         logger.debug("employId={}在{}增加了{}的库存{}", employeeId, new Date(),parts.getPartsNo(),addNum);
@@ -166,9 +166,7 @@ public class PartsServiceImpl implements PartsService {
         partsStream.setAfterInventory(parts.getInventory());
         partsStream.setCreateTime(new Date());
         partsStream.setType(PartsStream.PARTSSTREAM_TYPE_IN);
-        partsStreamMapper.insert(partsStream);
-
-        // TODO 添加事务
+        partsStreamMapper.insertSelective(partsStream);
     }
 
     /**
@@ -204,4 +202,84 @@ public class PartsServiceImpl implements PartsService {
         partsExample.createCriteria().andTypeIdEqualTo(id);
         return partsMapper.selectByExample(partsExample);
     }
+
+    /**
+     * 配件入库查询
+     *
+     * @param pageNo
+     * @param map
+     * @return
+     */
+    @Override
+    public PageInfo<PartsStream> selectInPage(Integer pageNo, Map<String, String> map) {
+        PageHelper.startPage(pageNo,Constant.DEFAULT_PAGE_SIZE);
+        List<PartsStream> partsList = partsStreamMapper.selectInPartsList(map);
+        PageInfo<PartsStream> partsPageInfo = new PageInfo<>(partsList);
+        return partsPageInfo;
+    }
+
+    /**
+     * 配件出库查询
+     *
+     * @param pageNo
+     * @param map
+     * @return
+     */
+    @Override
+    public PageInfo<PartsStream> selectOutPage(Integer pageNo, Map<String, String> map) {
+        PageHelper.startPage(pageNo,Constant.DEFAULT_PAGE_SIZE);
+        List<PartsStream> partsList = partsStreamMapper.selectOutPartsList(map);
+        PageInfo<PartsStream> partsPageInfo =  new PageInfo<>(partsList);
+        return partsPageInfo;
+    }
+
+
+
+    /**
+     * 查找类型商品类型列表
+     *
+     * @return
+     */
+    @Override
+    public List<Type> findTypes() {
+        TypeExample typeExample = new TypeExample();
+        return typeMapper.selectByExample(typeExample);
+    }
+
+    /**
+     * 删除类型
+     *
+     * @param id
+     */
+    @Override
+    public void typeDel(int id) {
+        PartsExample partsExample = new PartsExample();
+        partsExample.createCriteria().andTypeIdEqualTo(id);
+        List<Parts> partsList = partsMapper.selectByExample(partsExample);
+        if(partsList.size() != 0){
+            throw new NotAllowException("该类型下有产品");
+        }else{
+            typeMapper.deleteByPrimaryKey(id);
+        }
+    }
+
+    /**
+     * 新增类型
+     *
+     * @param typeName
+     */
+    @Override
+    public void typeNew(String typeName) {
+        TypeExample typeExample = new TypeExample();
+        typeExample.createCriteria().andTypeNameEqualTo(typeName);
+        List<Type> typeList = typeMapper.selectByExample(typeExample);
+        if(typeList.size() != 0){
+            throw new NotAllowException("该类型已存在");
+        }else{
+            Type type = new Type();
+            type.setTypeName(typeName);
+            typeMapper.insertSelective(type);
+        }
+    }
+
 }

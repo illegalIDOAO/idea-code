@@ -44,9 +44,15 @@
                     </c:if>
                     <button class="btn bg-gray-active btn-sm" id="printBtn"><i class="fa fa-print"></i> 打印</button>
                     <c:if test="${order.state == '0'}">
-                        <a href="/order/${order.id}/edit" class="btn bg-purple btn-sm"><i class="fa fa-pencil"></i> 修改订单</a>
-                        <button class="btn btn-danger btn-sm" id="transBtn"><i class="fa fa-trash-o"></i> 订单下发</button>
-                        <button class="btn btn-danger btn-sm" id="delBtn"><i class="fa fa-trash-o"></i> 删除</button>
+                        <shiro:hasPermission name="order:edit">
+                            <a href="/order/${order.id}/edit" class="btn bg-purple btn-sm"><i class="fa fa-pencil"></i> 修改订单</a>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="order:trans">
+                            <button class="btn btn-danger btn-sm" id="transBtn"><i class="fa fa-trash-o"></i> 订单下发</button>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="order:del">
+                            <button class="btn btn-danger btn-sm" id="delBtn"><i class="fa fa-trash-o"></i> 删除</button>
+                        </shiro:hasPermission>
                     </c:if>
                 </div>
             </div>

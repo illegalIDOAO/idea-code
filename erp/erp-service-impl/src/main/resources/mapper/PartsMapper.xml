@@ -207,7 +207,7 @@
       </where>
     </select>
 
-    <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map">
     update parts
     <set>
       <if test="record.id != null">

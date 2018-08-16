@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 服务名称，自定义 -->
+    <dubbo:application name="ErpServiceProvider"/>
+
+    <!--注册中心地址 -->
+    <dubbo:registry address="zookeeper://203.195.162.91:2181"/>
+    <!--<dubbo:registry address="zookeeper://192.168.1.100:2181;zookeeper://192.168.1.100:2182;zookeeper://192.168.1.100:2183"/>-->
+
+    <!--dubbo 的协议和端口 添加 host 可以指定使用的网卡 -->
+    <dubbo:protocol host="localhost" port="20880"/>
+
+    <!--暴露服务 -->
+    <bean id="carService" class="com.kaishengit.serviceimpl.CarServiceImpl"/>
+    <bean id="checkOrderService" class="com.kaishengit.serviceimpl.CheckOrderServiceImpl"/>
+    <bean id="employeeService" class="com.kaishengit.serviceimpl.EmployeeServiceImpl"/>
+    <bean id="fixOrderService" class="com.kaishengit.serviceimpl.FixOrderServiceImpl"/>
+    <bean id="orderService" class="com.kaishengit.serviceimpl.OrderServiceImpl"/>
+    <bean id="partsService" class="com.kaishengit.serviceimpl.PartsServiceImpl"/>
+    <bean id="permissionService" class="com.kaishengit.serviceimpl.PermissionServiceImpl"/>
+    <bean id="roleService" class="com.kaishengit.serviceimpl.RoleServiceImpl"/>
+
+    <dubbo:service interface="com.kaishengit.service.CarService" ref="carService"/>
+    <dubbo:service interface="com.kaishengit.service.CheckOrderService" ref="checkOrderService"/>
+    <dubbo:service interface="com.kaishengit.service.EmployeeService" ref="employeeService"/>
+    <dubbo:service interface="com.kaishengit.service.FixOrderService" ref="fixOrderService"/>
+    <dubbo:service interface="com.kaishengit.service.OrderService" ref="orderService"/>
+    <dubbo:service interface="com.kaishengit.service.PartsService" ref="partsService"/>
+    <dubbo:service interface="com.kaishengit.service.PermissionService" ref="permissionService"/>
+    <dubbo:service interface="com.kaishengit.service.RoleService" ref="roleService"/>
+
+</beans>

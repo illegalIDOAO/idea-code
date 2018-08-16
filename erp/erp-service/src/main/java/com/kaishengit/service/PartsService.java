@@ -2,6 +2,8 @@ package com.kaishengit.service;
 
 import com.github.pagehelper.PageInfo;
 import com.kaishengit.entity.Parts;
+import com.kaishengit.entity.PartsStream;
+import com.kaishengit.entity.Type;
 
 import java.util.List;
 import java.util.Map;
@@ -80,4 +82,39 @@ public interface PartsService {
      * @return
      */
     List<Parts> findPartsByTypeId(int id);
+
+    /**
+     * 配件入库查询
+     * @param pageNo
+     * @param map
+     * @return
+     */
+    PageInfo<PartsStream> selectInPage(Integer pageNo, Map<String,String> map);
+
+    /**
+     * 配件出库查询
+     * @param pageNo
+     * @param map
+     * @return
+     */
+    PageInfo<PartsStream> selectOutPage(Integer pageNo, Map<String,String> map);
+
+
+    /**
+     * 查找类型商品类型列表
+     * @return
+     */
+    List<Type> findTypes();
+
+    /**
+     * 删除类型
+     * @param id
+     */
+    void typeDel(int id);
+
+    /**
+     * 新增类型
+     * @param typeName
+     */
+    void typeNew(String typeName);
 }

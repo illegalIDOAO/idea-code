@@ -10,9 +10,11 @@
     <title>车管家ERP-订单列表</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
     <!-- =============================================== -->
     <%@include file="../include/css.jsp"%>
     <!-- =============================================== -->
+
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
@@ -33,7 +35,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                入库单查询
+                出库单查询
             </h1>
         </section>
 
@@ -42,11 +44,11 @@
 
             <div class="box no-border">
                 <div class="box-body">
-                    <form class="form-inline">
-                        <input type="text" name="orderId" placeholder="订单号" class="form-control">
-                        <input type="text" name="partsId" placeholder="配件编号" class="form-control">
-                        <input type="hidden" name="startTime" id="startTime">
-                        <input type="hidden" name="endTime" id="endTime">
+                    <form class="form-inline" action="/parts/partsOutList">
+                        <input type="text" name="orderId" placeholder="订单号" value="${param.orderId}" class="form-control">
+                        <input type="text" name="partsNo" placeholder="配件编号" value="${param.partsNo}" class="form-control">
+                        <input type="hidden" name="startTime" value="${param.startTime}" id="startTime">
+                        <input type="hidden" name="endTime" value="${param.endTime}" id="endTime">
                         <input type="text" class="form-control" id="time" placeholder="下单日期选择">
                         <button class="btn btn-default">搜索</button>
                     </form>
@@ -62,31 +64,26 @@
                             <th>订单号</th>
                             <th>配件编码</th>
                             <th>配件名称</th>
-                            <th>入库前数量</th>
-                            <th>入库数量</th>
-                            <th>当前数量</th>
-                            <th>采购员</th>
+                            <th>出库前数量</th>
+                            <th>出库数量</th>
+                            <th>余量</th>
+                            <th>出库时间</th>
+                            <th>取件员</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>100198763</td>
-                            <td>XN12334241</td>
-                            <td>嘉实多机油1L</td>
-                            <td>20</td>
-                            <td>200</td>
-                            <td>220</td>
-                            <td>周星星</td>
-                        </tr>
-                        <tr>
-                            <td>100198763</td>
-                            <td>XN12334241</td>
-                            <td>嘉实多机油1L</td>
-                            <td>20</td>
-                            <td>200</td>
-                            <td>220</td>
-                            <td>周星星</td>
-                        </tr>
+                        <c:forEach items="${page.list}" var="partsStream">
+                            <tr>
+                                <td>${partsStream.orderId}</td>
+                                <td>${partsStream.parts.partsNo}</td>
+                                <td>${partsStream.parts.partsName}</td>
+                                <td>${partsStream.preInventory}</td>
+                                <td>${partsStream.num}</td>
+                                <td>${partsStream.afterInventory}</td>
+                                <td><fmt:formatDate value="${partsStream.createTime}"/></td>
+                                <td>${partsStream.employeeName}</td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                     <ul id="pagination" class="pagination pull-right"></ul>
@@ -119,7 +116,7 @@
             last:'末页',
             prev:'上一页',
             next:'下一页',
-            href:"?p={{number}}&orderId=&partsId=&startTime=&endTime="
+            href:"?p={{number}}&orderId=${param.orderId}&partsNo=${param.partsNo}&startTime=${param.startTime}&endTime=${param.endTime}"
         });
 
         var locale = {
@@ -136,12 +133,12 @@
             "firstDay": 1
         };
 
-        var startDate = "";
-        var endDate = "";
-
+        var startDate = "${param.startTime}";
+        var endDate = "${param.endTime}";
         if(startDate && endDate) {
             $('#time').val(startDate + " / " + endDate);
         }
+
 
         $('#time').daterangepicker({
             autoUpdateInput:false,

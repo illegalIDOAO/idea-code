@@ -150,7 +150,7 @@
     </if>
   </select>
 
-  <resultMap id="partsWithNumMap" type="com.kaishengit.entity.Parts">
+<!--  <resultMap id="partsWithNumMap" type="com.kaishengit.entity.Parts">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="parts_no" jdbcType="VARCHAR" property="partsNo" />
     <result column="parts_name" jdbcType="VARCHAR" property="partsName" />
@@ -160,8 +160,8 @@
     <result column="type_id" jdbcType="INTEGER" property="typeId" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="num" property="num"/>
-  </resultMap>
-  <select id="selectPartsListByOrderId" resultMap="partsWithNumMap">
+  </resultMap>-->
+  <select id="selectPartsListByOrderId" resultType="com.kaishengit.entity.Parts">
       SELECT
           p.*, o.num
       FROM

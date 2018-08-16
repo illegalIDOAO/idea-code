@@ -1,8 +1,11 @@
 package com.kaishengit.mapper;
 
+import com.kaishengit.entity.Parts;
 import com.kaishengit.entity.PartsStream;
 import com.kaishengit.entity.PartsStreamExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface PartsStreamMapper {
@@ -27,4 +30,8 @@ public interface PartsStreamMapper {
     int updateByPrimaryKeySelective(PartsStream record);
 
     int updateByPrimaryKey(PartsStream record);
+
+    List<PartsStream> selectInPartsList(Map<String,String> map);
+
+    List<PartsStream> selectOutPartsList(Map<String,String> map);
 }

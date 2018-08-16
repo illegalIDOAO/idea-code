@@ -33,4 +33,5 @@ public interface PartsMapper {
     List<Parts> findPage();
 
     List<Parts> findPageByKey(Map<String, Object> map);
+
 }

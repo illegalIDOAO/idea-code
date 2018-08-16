@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <!-- 服务名称，自定义 -->
+    <dubbo:application name="ErpRepertoryWeb"/>
+
+    <!--注册中心地址 -->
+    <dubbo:registry address="zookeeper://203.195.162.91:2181"/>
+
+    <!--接受消费服务 -->
+    <dubbo:reference interface="com.kaishengit.service.EmployeeService" id="employeeService" timeout="3000"/>
+    <dubbo:reference interface="com.kaishengit.service.PermissionService" id="permissionService" timeout="3000"/>
+    <dubbo:reference interface="com.kaishengit.service.OrderService" id="orderService" timeout="3000"/>
+    <dubbo:reference interface="com.kaishengit.service.CheckOrderService" id="checkOrderService" timeout="3000"/>
+    <dubbo:reference interface="com.kaishengit.service.FixOrderService" id="fixOrderService" timeout="3000"/>
+
+</beans>

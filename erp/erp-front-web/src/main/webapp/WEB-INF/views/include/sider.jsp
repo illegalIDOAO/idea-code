@@ -1,6 +1,6 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 
 <!-- 左侧菜单栏 -->
 <aside class="main-sidebar">
@@ -18,7 +18,9 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="/order/undone/list"><i class="fa fa-circle-o"></i>订单查询</a></li>
-                    <li><a href="/order/new"><i class="fa fa-circle-o"></i>新增订单</a></li>
+                    <shiro:hasPermission name="order:new">
+                        <li><a href="/order/new"><i class="fa fa-circle-o"></i>新增订单</a></li>
+                    </shiro:hasPermission>
                 </ul>
             </li>
 

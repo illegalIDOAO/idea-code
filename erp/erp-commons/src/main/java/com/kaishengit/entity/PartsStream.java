@@ -8,9 +8,10 @@ import java.util.Date;
  */
 public class PartsStream implements Serializable {
 
-   public static final Integer PARTSSTREAM_TYPE_NEW = 0;
-   public static final Integer PARTSSTREAM_TYPE_IN  = 1;
-   public static final Integer PARTSSTREAM_TYPE_OUT = 2;
+    public static final Integer PARTSSTREAM_TYPE_NEW = 0;
+    public static final Integer PARTSSTREAM_TYPE_IN = 1;
+    public static final Integer PARTSSTREAM_TYPE_OUT = 2;
+
 
     /**
      * 备件流水ID
@@ -36,8 +37,10 @@ public class PartsStream implements Serializable {
      */
     private Integer employeeId;
 
+    private Integer orderId;
+
     /**
-     * 0.新增类型 1.入库 2.出库
+     * 0.新增 1.入库 2.出库
      */
     private Integer type;
 
@@ -46,15 +49,16 @@ public class PartsStream implements Serializable {
      */
     private Date createTime;
 
-    private Employee employee;
-
-    public Employee getEmployee() {
-        return employee;
+    public String getEmployeeName() {
+        return employeeName;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployeeName(String employeeName) {
+        this.employeeName = employeeName;
     }
+
+    private String employeeName;
+    private Parts parts;
 
     public Parts getParts() {
         return parts;
@@ -63,8 +67,6 @@ public class PartsStream implements Serializable {
     public void setParts(Parts parts) {
         this.parts = parts;
     }
-
-    private Parts parts;
 
     private static final long serialVersionUID = 1L;
 
@@ -116,6 +118,14 @@ public class PartsStream implements Serializable {
         this.employeeId = employeeId;
     }
 
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
+
     public Integer getType() {
         return type;
     }
@@ -150,6 +160,7 @@ public class PartsStream implements Serializable {
             && (this.getNum() == null ? other.getNum() == null : this.getNum().equals(other.getNum()))
             && (this.getAfterInventory() == null ? other.getAfterInventory() == null : this.getAfterInventory().equals(other.getAfterInventory()))
             && (this.getEmployeeId() == null ? other.getEmployeeId() == null : this.getEmployeeId().equals(other.getEmployeeId()))
+            && (this.getOrderId() == null ? other.getOrderId() == null : this.getOrderId().equals(other.getOrderId()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getCreateTime() == null ? other.getCreateTime() == null : this.getCreateTime().equals(other.getCreateTime()));
     }
@@ -164,6 +175,7 @@ public class PartsStream implements Serializable {
         result = prime * result + ((getNum() == null) ? 0 : getNum().hashCode());
         result = prime * result + ((getAfterInventory() == null) ? 0 : getAfterInventory().hashCode());
         result = prime * result + ((getEmployeeId() == null) ? 0 : getEmployeeId().hashCode());
+        result = prime * result + ((getOrderId() == null) ? 0 : getOrderId().hashCode());
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getCreateTime() == null) ? 0 : getCreateTime().hashCode());
         return result;
@@ -181,6 +193,7 @@ public class PartsStream implements Serializable {
         sb.append(", num=").append(num);
         sb.append(", afterInventory=").append(afterInventory);
         sb.append(", employeeId=").append(employeeId);
+        sb.append(", orderId=").append(orderId);
         sb.append(", type=").append(type);
         sb.append(", createTime=").append(createTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);

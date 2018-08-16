@@ -2,13 +2,17 @@ package com.kaishengit.serviceimpl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.kaishengit.dto.OrderStateDto;
 import com.kaishengit.entity.*;
 import com.kaishengit.exception.NotAllowException;
 import com.kaishengit.mapper.*;
+import com.kaishengit.sendMQ.FixOrderSendQueue;
 import com.kaishengit.service.OrderService;
 import com.kaishengit.util.Constant;
 import com.kaishengit.vo.OrderVo;
 import com.kaishengit.vo.PartsVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +27,10 @@ import java.util.Map;
 @Service
 public class OrderServiceImpl implements OrderService {
 
+
+    Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+
+
     @Autowired
     private ServiceTypeMapper serviceTypeMapper;
     @Autowired
@@ -32,9 +40,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderPartsMapper orderPartsMapper;
     @Autowired
-    private CarMapper carMapper;
+    private FixOrderSendQueue fixOrderSendQueue;
     @Autowired
-    private CustomerMapper customerMapper;
+    private PartsMapper partsMapper;
+
+
 
     /**
      * 分页查询订单信息
@@ -95,10 +105,15 @@ public class OrderServiceImpl implements OrderService {
         orderParts.setOrderId(order.getId());
         List<PartsVo> partsVoList = orderVo.getPartsList();
         for(PartsVo partsVo : partsVoList){
+            Parts parts = partsMapper.selectByPrimaryKey(partsVo.getPartsId());
+            if(partsVo.getNum() > parts.getInventory()){
+                throw new NotAllowException("库存不足");
+            }
             orderParts.setPartsId(partsVo.getPartsId());
             orderParts.setNum(partsVo.getNum());
             orderPartsMapper.insert(orderParts);
         }
+
         return order.getId();
     }
 
@@ -110,14 +125,10 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public Order selectOrderWithCarAndCustomerById(int id) {
-        Order order = orderMapper.selectByPrimaryKey(id);
+        Order order = orderMapper.selectWihtCarInfo(id);
         if(order == null){
             throw new NotAllowException("无此订单");
         }
-        Car car = carMapper.selectByPrimaryKey(order.getCarId());
-        Customer customer = customerMapper.selectByPrimaryKey(car.getCustomerId());
-        order.setCar(car);
-        order.setCustomer(customer);
 
         return order;
     }
@@ -180,6 +191,7 @@ public class OrderServiceImpl implements OrderService {
      * @param id
      */
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void transOrder(int id) {
         Order order = orderMapper.selectByPrimaryKey(id);
         if(order == null){
@@ -188,8 +200,11 @@ public class OrderServiceImpl implements OrderService {
         if(!order.getState().equals(Order.ORDER_STATE_NEW)){
             throw new NotAllowException("订单已下发，请勿重复操作");
         }
-        order.setState(Order.ORDER_STATE_WAITPULL);
+        order.setState(Order.ORDER_STATE_WAITFIX);
         orderMapper.updateByPrimaryKeySelective(order);
+
+        //加入队列
+        fixOrderSendQueue.frontTofixQueue(id);
     }
 
     /**
@@ -241,6 +256,97 @@ public class OrderServiceImpl implements OrderService {
             orderParts.setNum(partsVo.getNum());
             orderPartsMapper.insert(orderParts);
         }
-
     }
+
+    /**
+     * 改变订单状态为正在维修，并添加订单与员工关联关系
+     *
+     * @param orderStateDto
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void changeStateToFixing(OrderStateDto orderStateDto) {
+        //改变订单状态
+        Order order = orderMapper.selectByPrimaryKey(orderStateDto.getOrderId());
+        if(order == null){
+            logger.info("orderId={} 的订单不存在,无法进行领取维修操作",orderStateDto.getOrderId());
+        }else if(!Order.ORDER_STATE_WAITFIX.equals(order.getState())){
+            logger.info("orderId={} 的订单是待维修,无法领取维修任务",orderStateDto.getOrderId());
+        }else{
+            order.setState(orderStateDto.getState());
+            orderMapper.updateByPrimaryKeySelective(order);
+
+            //新增员工订单关联关系表
+            OrderEmployee orderEmployee = new OrderEmployee();
+            orderEmployee.setOrderId(orderStateDto.getOrderId());
+            orderEmployee.setEmployeeId(orderStateDto.getEmployeeId());
+            orderEmployeeMapper.insertSelective(orderEmployee);
+        }
+    }
+
+    /**
+     * 更改订单状态为待质检
+     * @param orderStateDto
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void changeStateToWaitCheck(OrderStateDto orderStateDto) {
+        //改变订单状态
+        Order order = orderMapper.selectByPrimaryKey(orderStateDto.getOrderId());
+        if(order == null){
+            logger.info("orderId={} 的订单不存在,无法进行领取维修操作",orderStateDto.getOrderId());
+        }else if(!Order.ORDER_STATE_FIXING.equals(order.getState())){
+            logger.info("orderId={} 的订单状态不是正在维修,无法提交检测",orderStateDto.getOrderId());
+        }else{
+            order.setState(orderStateDto.getState());
+            orderMapper.updateByPrimaryKeySelective(order);
+        }
+    }
+
+    /**
+     * 更改订单状态为正在质检，并添加订单与员工关联关系
+     *
+     * @param orderStateDto
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void changeStateToChecking(OrderStateDto orderStateDto) {
+        //改变订单状态
+        Order order = orderMapper.selectByPrimaryKey(orderStateDto.getOrderId());
+        if(order == null){
+            logger.info("orderId={} 的订单不存在,无法进行领取维修操作",orderStateDto.getOrderId());
+        }else if(!Order.ORDER_STATE_WAITCHECK.equals(order.getState())){
+            logger.info("orderId={} 的订单是待质检,无法领取维修任务",orderStateDto.getOrderId());
+        }else{
+            order.setState(orderStateDto.getState());
+            orderMapper.updateByPrimaryKeySelective(order);
+
+            //新增质检员工订单关联关系表
+            OrderEmployee orderEmployee = new OrderEmployee();
+            orderEmployee.setOrderId(orderStateDto.getOrderId());
+            orderEmployee.setEmployeeId(orderStateDto.getEmployeeId());
+            orderEmployeeMapper.insertSelective(orderEmployee);
+        }
+    }
+
+    /**
+     * 更改订单状态为待结账
+     *
+     * @param orderStateDto
+     */
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void changeStateToWaitAccount(OrderStateDto orderStateDto) {
+        //改变订单状态
+        Order order = orderMapper.selectByPrimaryKey(orderStateDto.getOrderId());
+        if(order == null){
+            logger.info("orderId={} 的订单不存在,无法进行领取维修操作",orderStateDto.getOrderId());
+        }else if(!Order.ORDER_STATE_CHECKING.equals(order.getState())){
+            logger.info("orderId={} 的订单未处于检测流程,无法提交结账",orderStateDto.getOrderId());
+        }else{
+            order.setState(orderStateDto.getState());
+            orderMapper.updateByPrimaryKeySelective(order);
+        }
+    }
+
 }

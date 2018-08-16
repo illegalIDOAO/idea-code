@@ -1,5 +1,6 @@
 package com.kaishengit.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -7,12 +8,24 @@ import java.util.List;
  * @Author: chuzhaohui
  * @Date: Created in 8:41 2018/8/4
  */
-public class OrderVo {
+public class OrderVo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Integer carId;
     private Integer serviceTypeId;
     private BigDecimal fee;
     private List<PartsVo> partsList;
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    private Integer employeeId;
 
     @Override
     public String toString() {

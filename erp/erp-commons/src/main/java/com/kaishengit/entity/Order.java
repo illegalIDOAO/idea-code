@@ -3,6 +3,7 @@ package com.kaishengit.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 
@@ -10,23 +11,23 @@ import java.util.Date;
 public class Order implements Serializable {
 
     public static final String ORDER_STATE_NEW= "0";
-    public static final String ORDER_STATE_WAITPULL = "1";
+    public static final String ORDER_STATE_WAITFIX = "1";
     public static final String ORDER_STATE_FIXING = "2";
-    public static final String ORDER_STATE_WAITCHECK_ = "3";
-    public static final String ORDER_STATE_CHECKING_ = "4";
+    public static final String ORDER_STATE_WAITCHECK = "3";
+    public static final String ORDER_STATE_CHECKING = "4";
     public static final String ORDER_STATE_WAITACCOUNT = "5";
     public static final String ORDER_STATE_DONE = "6";
 
     public String getStateMean(){
         if(getState().equals(ORDER_STATE_NEW)){
             return "新订单";
-        }else if(getState().equals(ORDER_STATE_WAITPULL)){
+        }else if(getState().equals(ORDER_STATE_WAITFIX)){
             return "已下发，等待领取";
         }else if(getState().equals(ORDER_STATE_FIXING)){
             return "正在处理";
-        }else if(getState().equals(ORDER_STATE_WAITCHECK_)){
+        }else if(getState().equals(ORDER_STATE_WAITCHECK)){
             return "等待质检";
-        }else if(getState().equals(ORDER_STATE_CHECKING_)){
+        }else if(getState().equals(ORDER_STATE_CHECKING)){
             return "正在质检";
         }else if(getState().equals(ORDER_STATE_WAITACCOUNT)){
             return "待结账";
@@ -64,6 +65,18 @@ public class Order implements Serializable {
      */
     private Integer serviceTypeId;
 
+    private Car car;
+    private Customer customer;
+    private List<Parts> partsList;
+
+    public List<Parts> getPartsList() {
+        return partsList;
+    }
+
+    public void setPartsList(List<Parts> partsList) {
+        this.partsList = partsList;
+    }
+
     public Car getCar() {
         return car;
     }
@@ -72,8 +85,6 @@ public class Order implements Serializable {
         this.car = car;
     }
 
-    private Car car;
-
     public Customer getCustomer() {
         return customer;
     }
@@ -81,8 +92,6 @@ public class Order implements Serializable {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-
-    private Customer customer;
 
     private static final long serialVersionUID = 1L;
 

@@ -31,4 +31,6 @@ public interface OrderMapper {
     int updateByPrimaryKey(Order record);
 
     List<Order> selectByMap(Map<String,String> map);
+
+    Order selectWihtCarInfo(Integer id);
 }

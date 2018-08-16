@@ -8,7 +8,6 @@ import com.kaishengit.entity.*;
 import com.kaishengit.exception.NotAllowException;
 import com.kaishengit.service.OrderService;
 import com.kaishengit.service.PartsService;
-import com.kaishengit.service.TypeService;
 import com.kaishengit.vo.OrderInfoVo;
 import com.kaishengit.vo.OrderVo;
 import org.apache.shiro.SecurityUtils;
@@ -34,8 +33,6 @@ public class OrderController {
     @Autowired
     private PartsService partsService;
     @Autowired
-    private TypeService typeService;
-    @Autowired
     private OrderService orderService;
 
     @GetMapping("/new")
@@ -53,7 +50,7 @@ public class OrderController {
     @GetMapping("/parts/types")
     @ResponseBody
     public ResponseBean getPartsTypeList(){
-        List<Type> typeList = typeService.findTypes();
+        List<Type> typeList = partsService.findTypes();
         return ResponseBean.success(typeList);
     }
 
@@ -73,9 +70,11 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         Employee employee = (Employee) subject.getPrincipal();
 
-        try{
-            Integer orderId = orderService.newOrder(orderVo,employee.getId());
+        try {
+            Integer orderId = orderService.newOrder(orderVo, employee.getId());
             return ResponseBean.success(orderId);
+        }catch (NotAllowException e){
+            return ResponseBean.error(e.getMessage());
         }catch(RuntimeException e){
             return ResponseBean.error("系统异常，下单失败");
         }
@@ -119,8 +118,6 @@ public class OrderController {
         map.put("startTime",startTime);
         map.put("endTime",endTime);
         map.put("exState",Order.ORDER_STATE_DONE);
-
-        System.out.println(map);
 
         PageInfo<Order> orderPageInfo = orderService.selectPage(pageNo, map);
 

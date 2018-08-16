@@ -1,6 +1,7 @@
 package com.kaishengit.service;
 
 import com.github.pagehelper.PageInfo;
+import com.kaishengit.dto.OrderStateDto;
 import com.kaishengit.entity.Order;
 import com.kaishengit.entity.Parts;
 import com.kaishengit.entity.ServiceType;
@@ -72,10 +73,34 @@ public interface OrderService {
     void transOrder(int id);
 
     /**
-     *
+     * 修改订单
      * @param orderId
      * @param orderVo
      * @param employeeId
      */
     void editOrder(int orderId, OrderVo orderVo, Integer employeeId);
+
+    /**
+     * 改变订单状态为正在维修，并添加订单与员工关联关系
+     * @param orderStateDto
+     */
+    void changeStateToFixing(OrderStateDto orderStateDto);
+
+    /**
+     * 更改订单状态为待检测
+     * @param orderStateDto
+     */
+    void changeStateToWaitCheck(OrderStateDto orderStateDto);
+
+    /**
+     * 更改订单状态为正在质检，并添加订单与员工关联关系
+     * @param orderStateDto
+     */
+    void changeStateToChecking(OrderStateDto orderStateDto);
+
+    /**
+     * 更改订单状态为待检测
+     * @param orderStateDto
+     */
+    void changeStateToWaitAccount(OrderStateDto orderStateDto);
 }

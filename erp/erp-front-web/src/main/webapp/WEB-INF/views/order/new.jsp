@@ -336,7 +336,11 @@
                     for(var i = 0; i < this.targetPartsList.length; i++){
                         if(this.targetParts.id == this.targetPartsList[i].id){
                             flag = false;
-                            this.targetPartsList[i].num++;
+                            if(this.targetPartsList[i].num < this.targetPartsList[i].inventory) {
+                                this.targetPartsList[i].num ++;
+                            } else {
+                                layer.msg("库存不足");
+                            }
                             break;
                         }
                     }
@@ -346,13 +350,17 @@
                         }
                     }
                 },
-                minus:function (ele) {
-                    if(ele.num > 1){
-                        ele.num--;
+                minus: function (item) {
+                    if(item.num > 1){
+                        item.num--;
                     }
                 },
-                plus:function (ele) {
-                    ele.num++;
+                plus: function (item) {
+                    if(item.num < item.inventory) {
+                        item.num++;
+                    } else {
+                        layer.msg("库存不足")
+                    }
                 },
                 delParts: function(ele){
                     var index = this.targetPartsList.indexOf(ele);
@@ -367,20 +375,15 @@
                         layer.msg("请选择服务类型");
                         return;
                     }
-                    /*var flag = false;
-                    for(var i = 0; i< this.targetPartsList.length; i++) {
-                        if (this.targetPartsList[i]) {
-                            flag = true;
-                            break;
-                        }
-                    }
-                    if(flag){
-                        layer.msg("请选择配件");
-                        return;
-                    }*/
                     if(!this.targetPartsList.length){
                         layer.msg("请选择配件");
                         return;
+                    }
+                    for(var i = 0; i< this.targetPartsList.length; i++) {
+                        if (this.targetPartsList[i].num > this.targetPartsList[i].inventory) {
+                            layer.msg("配件 " + this.targetPartsList[i].partsName + " 选取数量大于库存");
+                            return;
+                        }
                     }
                     var partsList = [];
                     for(var i = 0; i < this.targetPartsList.length; i++){

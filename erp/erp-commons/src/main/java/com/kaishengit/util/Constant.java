@@ -10,6 +10,7 @@ import java.util.Properties;
  */
 public class Constant {
 
+    public static final int DEFAULT_HOUR_FEE = 50;
     public static final int DEFAULT_PAGE_SIZE = 3;
     public static final String ADMIN_PASSWORD_SALT = "we_234afa*&8derg45";
 

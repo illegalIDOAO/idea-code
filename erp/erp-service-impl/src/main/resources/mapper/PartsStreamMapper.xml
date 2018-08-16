@@ -8,6 +8,7 @@
     <result column="num" jdbcType="INTEGER" property="num" />
     <result column="after_inventory" jdbcType="INTEGER" property="afterInventory" />
     <result column="employee_id" jdbcType="INTEGER" property="employeeId" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
     <result column="type" jdbcType="INTEGER" property="type" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
@@ -70,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, parts_id, pre_inventory, num, after_inventory, employee_id, type, create_time
+    id, parts_id, pre_inventory, num, after_inventory, employee_id, order_id, type, create_time
   </sql>
   <select id="selectByExample" parameterType="com.kaishengit.entity.PartsStreamExample" resultMap="BaseResultMap">
     select
@@ -113,10 +114,12 @@
   <insert id="insert" parameterType="com.kaishengit.entity.PartsStream">
     insert into parts_stream (id, parts_id, pre_inventory, 
       num, after_inventory, employee_id, 
-      type, create_time)
+      order_id, type, create_time
+      )
     values (#{id,jdbcType=INTEGER}, #{partsId,jdbcType=INTEGER}, #{preInventory,jdbcType=INTEGER}, 
       #{num,jdbcType=INTEGER}, #{afterInventory,jdbcType=INTEGER}, #{employeeId,jdbcType=INTEGER}, 
-      #{type,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+      #{orderId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.kaishengit.entity.PartsStream">
     insert into parts_stream
@@ -138,6 +141,9 @@
       </if>
       <if test="employeeId != null">
         employee_id,
+      </if>
+      <if test="orderId != null">
+        order_id,
       </if>
       <if test="type != null">
         type,
@@ -165,6 +171,9 @@
       <if test="employeeId != null">
         #{employeeId,jdbcType=INTEGER},
       </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
       </if>
@@ -178,6 +187,69 @@
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
+  </select>
+  
+  <resultMap id="partsStreamWithPartsMap" type="com.kaishengit.entity.PartsStream" extends="BaseResultMap">
+    <result column="employee_name" property="employeeName"/>
+    <association property="parts" javaType="com.kaishengit.entity.Parts">
+        <id column="parts_id" jdbcType="INTEGER" property="id" />
+        <result column="parts_no" jdbcType="VARCHAR" property="partsNo" />
+        <result column="parts_name" jdbcType="VARCHAR" property="partsName" />
+      </association>
+  </resultMap>
+  <select id="selectInPartsList" resultMap="partsStreamWithPartsMap">
+      SELECT
+          ps.*, e.employee_name,
+          p.parts_name,
+          p.parts_no
+      FROM
+          parts_stream ps,
+          parts p,
+          employee e
+      WHERE
+          ps.employee_id = e.id
+      AND ps.parts_id = p.id
+      and ps.order_id = 0
+        <if test="partsNo != null and partsNo != ''">
+          and p.parts_no = #{partsNo}
+        </if>
+        <if test="partsName != null and partsName != ''">
+          and p.parts_name like concat('%',#{partsName},'%')
+        </if>
+        <if test="startTime != null and startTime != ''">
+          AND ps.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+          AND ps.create_time &lt;=  #{endTime}
+        </if>
+      order by ps.create_time desc
+  </select>
+  <select id="selectOutPartsList" resultMap="partsStreamWithPartsMap">
+    SELECT
+        ps.*, e.employee_name,
+        p.parts_name,
+        p.parts_no
+    FROM
+        parts_stream ps,
+        parts p,
+        employee e
+    WHERE
+        ps.employee_id = e.id
+    AND ps.parts_id = p.id
+    and ps.type = 2
+        <if test="partsNo != null and partsNo != ''">
+          and p.parts_no = #{partsNo}
+        </if>
+        <if test="orderId != null and orderId != ''">
+          and ps.order_id = #{orderId}
+        </if>
+        <if test="startTime != null and startTime != ''">
+          AND ps.create_time >= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+          AND ps.create_time &lt;=  #{endTime}
+        </if>
+    order by ps.create_time desc
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update parts_stream
@@ -200,6 +272,9 @@
       <if test="record.employeeId != null">
         employee_id = #{record.employeeId,jdbcType=INTEGER},
       </if>
+      <if test="record.orderId != null">
+        order_id = #{record.orderId,jdbcType=INTEGER},
+      </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
       </if>
@@ -219,6 +294,7 @@
       num = #{record.num,jdbcType=INTEGER},
       after_inventory = #{record.afterInventory,jdbcType=INTEGER},
       employee_id = #{record.employeeId,jdbcType=INTEGER},
+      order_id = #{record.orderId,jdbcType=INTEGER},
       type = #{record.type,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -243,6 +319,9 @@
       <if test="employeeId != null">
         employee_id = #{employeeId,jdbcType=INTEGER},
       </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
@@ -259,6 +338,7 @@
       num = #{num,jdbcType=INTEGER},
       after_inventory = #{afterInventory,jdbcType=INTEGER},
       employee_id = #{employeeId,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER},
       type = #{type,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
