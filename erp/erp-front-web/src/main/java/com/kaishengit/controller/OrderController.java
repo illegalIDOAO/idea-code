@@ -70,12 +70,14 @@ public class OrderController {
         Subject subject = SecurityUtils.getSubject();
         Employee employee = (Employee) subject.getPrincipal();
 
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         try {
             Integer orderId = orderService.newOrder(orderVo, employee.getId());
             return ResponseBean.success(orderId);
         }catch (NotAllowException e){
             return ResponseBean.error(e.getMessage());
         }catch(RuntimeException e){
+            System.out.println("？？？？？？？？？？？？？？？");
             return ResponseBean.error("系统异常，下单失败");
         }
 

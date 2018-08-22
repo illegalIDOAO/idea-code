@@ -1,12 +1,10 @@
 package com.kaishengit.exception;
 
-import java.io.Serializable;
-
 /**
  * @Author: chuzhaohui
  * @Date: Created in 15:40 2018/7/24
  */
-public class NotAllowException extends RuntimeException {
+public class ServiceException extends RuntimeException {
 
 
     /**
@@ -14,7 +12,7 @@ public class NotAllowException extends RuntimeException {
      * detail message.  The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause}.
      */
-    public NotAllowException() {
+    public ServiceException() {
     }
 
     /**
@@ -25,7 +23,7 @@ public class NotAllowException extends RuntimeException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NotAllowException(String message) {
+    public ServiceException(String message) {
         super(message);
     }
 }

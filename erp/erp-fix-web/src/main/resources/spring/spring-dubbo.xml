@@ -8,7 +8,7 @@
        http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 
     <!-- 服务名称，自定义 -->
-    <dubbo:application name="ErpRepertoryWeb"/>
+    <dubbo:application name="ErpFixWeb"/>
 
     <!--注册中心地址 -->
     <dubbo:registry address="zookeeper://203.195.162.91:2181"/>

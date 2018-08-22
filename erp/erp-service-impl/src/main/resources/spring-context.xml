@@ -72,4 +72,12 @@
         <property name="basePackage" value="com.kaishengit.mapper"/>
     </bean>
 
+    <!--&lt;!&ndash;调度器&ndash;&gt;
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="configLocation" value="classpath:quartz.properties"/>
+        <property name="overwriteExistingJobs" value="true"/>
+    </bean>-->
+
 </beans>

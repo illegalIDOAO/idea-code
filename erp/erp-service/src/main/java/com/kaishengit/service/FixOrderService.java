@@ -44,4 +44,10 @@ public interface FixOrderService {
      */
     void done(int orderId, Integer employeeId);
 
+    /**
+     * 新增维修超时记录
+     * @param orderId
+     * @param employeeId
+     */
+    void addFixTimeout(Integer orderId, Integer employeeId);
 }

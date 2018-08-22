@@ -103,4 +103,9 @@ public interface OrderService {
      * @param orderStateDto
      */
     void changeStateToWaitAccount(OrderStateDto orderStateDto);
+
+    /**
+     * 统计每日订单
+     */
+    void statisticalDailyOrder();
 }

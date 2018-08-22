@@ -7,4 +7,5 @@
     <import resource="classpath*:spring-context.xml"/>
     <import resource="classpath*:spring-dubbo.xml"/>
     <import resource="classpath*:spring-queue.xml"/>
+    <import resource="classpath*:spring-quartz-statistical.xml"/>
 </beans>

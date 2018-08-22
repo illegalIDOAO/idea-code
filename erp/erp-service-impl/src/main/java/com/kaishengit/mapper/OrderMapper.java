@@ -33,4 +33,6 @@ public interface OrderMapper {
     List<Order> selectByMap(Map<String,String> map);
 
     Order selectWihtCarInfo(Integer id);
+
+    List<Order> selectDailyOrder(@Param("state") String state, @Param("dateTime") String dateTime);
 }

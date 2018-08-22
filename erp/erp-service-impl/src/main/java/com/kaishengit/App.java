@@ -15,6 +15,7 @@ public class App {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring.xml");
         context.start();
 
+        System.out.println("容器启动成功...");
         System.in.read();
     }
 }

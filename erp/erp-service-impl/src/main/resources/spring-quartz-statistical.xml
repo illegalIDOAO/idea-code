@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--每日统计报表-->
+    <!--创建jobDetail-->
+    <bean id="dailyJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.kaishengit.quartz.DailyStatisticalJob"/>
+        <!--是否是固定重复的任务-->
+        <property name="durability" value="true"/>
+    </bean>
+
+    <!--定义Trigger-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="dailyJobDetail"/>
+        <property name="cronExpression" value="30 15 18 * * ?"/>
+    </bean>
+
+    <!--调度器-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <!--设置Spring容器-->
+        <property name="applicationContextSchedulerContextKey" value="applicationContext"/>
+        <property name="dataSource" ref="datasource"/>
+        <property name="transactionManager" ref="transactionManager"/>
+        <property name="configLocation" value="classpath:quartz.properties"/>
+        <property name="overwriteExistingJobs" value="true"/>
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+    </bean>
+
+</beans>

@@ -1,10 +1,12 @@
 package com.kaishengit.vo;
 
+import java.io.Serializable;
+
 /**
  * @Author: chuzhaohui
  * @Date: Created in 8:41 2018/8/4
  */
-public class PartsVo {
+public class PartsVo implements Serializable {
 
     private Integer partsId;
     private Integer num;

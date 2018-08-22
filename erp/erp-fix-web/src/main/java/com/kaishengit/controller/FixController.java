@@ -4,6 +4,7 @@ import com.kaishengit.dto.ResponseBean;
 import com.kaishengit.entity.Employee;
 import com.kaishengit.entity.FixOrder;
 import com.kaishengit.exception.NotAllowException;
+import com.kaishengit.exception.ServiceException;
 import com.kaishengit.service.FixOrderService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -46,7 +47,7 @@ public class FixController {
         try{
             fixOrderService.pullTast(id,employee.getId());
             return ResponseBean.success();
-        } catch (NotAllowException e){
+        } catch (ServiceException e){
 
             System.out.println("NotAllowException--------------");
             System.out.println(e.getMessage());

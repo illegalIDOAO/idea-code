@@ -11,12 +11,16 @@ import com.kaishengit.service.OrderService;
 import com.kaishengit.util.Constant;
 import com.kaishengit.vo.OrderVo;
 import com.kaishengit.vo.PartsVo;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +47,8 @@ public class OrderServiceImpl implements OrderService {
     private FixOrderSendQueue fixOrderSendQueue;
     @Autowired
     private PartsMapper partsMapper;
+    @Autowired
+    private DailyStatisticalMapper dailyStatisticalMapper;
 
 
 
@@ -85,6 +91,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackFor = RuntimeException.class)
     public Integer newOrder(OrderVo orderVo, Integer employeeId) {
 
+        System.out.println("==========================");
         //录入订单信息
         Order order = new Order();
         order.setCarId(orderVo.getCarId());
@@ -93,13 +100,11 @@ public class OrderServiceImpl implements OrderService {
         order.setState(Order.ORDER_STATE_NEW);
 
         orderMapper.insertSelective(order);
-
         //录入订单和员工关联关系
         OrderEmployee orderEmployee = new OrderEmployee();
         orderEmployee.setEmployeeId(employeeId);
         orderEmployee.setOrderId(order.getId());
         orderEmployeeMapper.insert(orderEmployee);
-
         //录入订单和配件关联关系
         OrderParts orderParts = new OrderParts();
         orderParts.setOrderId(order.getId());
@@ -113,7 +118,6 @@ public class OrderServiceImpl implements OrderService {
             orderParts.setNum(partsVo.getNum());
             orderPartsMapper.insert(orderParts);
         }
-
         return order.getId();
     }
 
@@ -347,6 +351,34 @@ public class OrderServiceImpl implements OrderService {
             order.setState(orderStateDto.getState());
             orderMapper.updateByPrimaryKeySelective(order);
         }
+    }
+
+    /**
+     * 统计每日订单
+     */
+    @Override
+    public void statisticalDailyOrder() {
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
+        DateTime dt = new DateTime();
+        dt = dt.minusDays(1);
+        String yesterday = fmt.print(dt);
+
+        List<Order> orderList = orderMapper.selectDailyOrder(Order.ORDER_STATE_DONE,yesterday);
+
+        DailyStatistical dailyStatistical = new DailyStatistical();
+        dailyStatistical.setDataTime(yesterday);
+        if(orderList != null && orderList.size() > 0){
+            dailyStatistical.setSumNum(orderList.size());
+
+            BigDecimal totalMomey = BigDecimal.ZERO;
+            for(Order order : orderList){
+                totalMomey = totalMomey.add(order.getOrderMoney());
+            }
+            dailyStatistical.setSumMomey(totalMomey);
+
+        }
+        dailyStatisticalMapper.insertSelective(dailyStatistical);
+
     }
 
 }

@@ -4,11 +4,16 @@ import com.kaishengit.dto.OrderInfoDto;
 import com.kaishengit.dto.OrderStateDto;
 import com.kaishengit.entity.*;
 import com.kaishengit.exception.NotAllowException;
+import com.kaishengit.exception.ServiceException;
 import com.kaishengit.mapper.*;
+import com.kaishengit.quartz.FixTimeOutJob;
 import com.kaishengit.sendMQ.FixOrderSendQueue;
 import com.kaishengit.service.FixOrderService;
 import com.kaishengit.util.Constant;
+import org.joda.time.DateTime;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +42,10 @@ public class FixOrderServiceImpl implements FixOrderService {
     private FixOrderSendQueue fixOrderSendQueue;
     @Autowired
     private EmployeeMapper employeeMapper;
+    @Autowired
+    private SchedulerFactoryBean schedulerFactoryBean;
+    @Autowired
+    private FixTimeoutMapper fixTimeoutMapper;
 
 
     /**
@@ -81,7 +90,6 @@ public class FixOrderServiceImpl implements FixOrderService {
 
             fixOrderPartsMapper.insertSelective(fixOrderParts);
         }
-
     }
 
     /**
@@ -108,15 +116,15 @@ public class FixOrderServiceImpl implements FixOrderService {
         fixOrderExample.createCriteria().andFixEmployeeIdEqualTo(employeeId).andStateEqualTo(FixOrder.ORDER_STATE_FIXING);
         List<FixOrder> fixOrderList = fixOrderMapper.selectByExample(fixOrderExample);
         if(fixOrderList != null && fixOrderList.size() != 0){
-            throw new NotAllowException("该账户下有维修订单未完成，请完成后再领取新订单");
+            throw new ServiceException("该账户下有维修订单未完成，请完成后再领取新订单");
         }
 
         //更新FixOrder
         FixOrder fixOrder = fixOrderMapper.selectOrderByOrderId(orderId);
         if(fixOrder == null){
-            throw new NotAllowException("订单不存在");
+            throw new ServiceException("订单不存在");
         }else if(!FixOrder.ORDER_STATE_WAITFIX.equals(fixOrder.getState())){
-            throw new NotAllowException("订单不是待维修状态，无法领取维修任务");
+            throw new ServiceException("订单不是待维修状态，无法领取维修任务");
         }
 
         fixOrder.setState(FixOrder.ORDER_STATE_FIXING);
@@ -150,6 +158,8 @@ public class FixOrderServiceImpl implements FixOrderService {
             parts.setInventory(parts.getInventory() - parts.getNum());
             partsMapper.updateByPrimaryKeySelective(parts);
         }
+
+        addTask(orderId,employeeId,Integer.parseInt(fixOrder.getOrderServiceHour()));
 
         return fixOrder;
     }
@@ -191,5 +201,67 @@ public class FixOrderServiceImpl implements FixOrderService {
         orderStateDto.setOrderId(orderId);
         orderStateDto.setState(FixOrder.ORDER_STATE_WAITCHECK);
         fixOrderSendQueue.fixToFront(orderStateDto);
+
+        delteTask(orderId,employeeId);
     }
+
+    /**
+     * 新增维修超时记录
+     *
+     * @param orderId
+     * @param employeeId
+     */
+    @Override
+    public void addFixTimeout(Integer orderId, Integer employeeId) {
+        FixTimeout fixTimeout = new FixTimeout();
+        fixTimeout.setEmployeeId(employeeId);
+        fixTimeout.setOrderId(orderId);
+        fixTimeoutMapper.insertSelective(fixTimeout);
+    }
+
+
+    public void addTask(Integer orderId, Integer employeeId, Integer serviceHour){
+
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put("orderId",orderId);
+        jobDataMap.put("employeeId",employeeId);
+
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+
+        JobDetail jobDetail = JobBuilder.newJob(FixTimeOutJob.class)
+                .withIdentity(orderId + "-" + employeeId,"fix")
+                .setJobData(jobDataMap).build();
+
+        DateTime dateTime = new DateTime();
+        dateTime = dateTime.plusHours(serviceHour);
+        //dateTime = dateTime.plusMinutes(serviceHour);//
+        String cronExpression = dateTime.getSecondOfMinute() + " "
+                + dateTime.getMinuteOfHour() + " "
+                + dateTime.getHourOfDay() + " "
+                + dateTime.getDayOfMonth() + " "
+                + dateTime.getMonthOfYear() + " ? "
+                + dateTime.getYear();
+
+        CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
+        Trigger trigger = TriggerBuilder.newTrigger().withSchedule(cronScheduleBuilder).build();
+
+        try {
+            scheduler.scheduleJob(jobDetail,trigger);
+            scheduler.start();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delteTask(int orderId,int employeeId){
+        Scheduler scheduler = schedulerFactoryBean.getScheduler();
+        try {
+            scheduler.deleteJob(new JobKey(orderId + "-" + employeeId,"fix"));
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }

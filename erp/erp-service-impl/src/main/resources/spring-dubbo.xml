@@ -11,14 +11,14 @@
     <!--<dubbo:registry address="zookeeper://192.168.1.100:2181;zookeeper://192.168.1.100:2182;zookeeper://192.168.1.100:2183"/>-->
 
     <!--dubbo 的协议和端口 添加 host 可以指定使用的网卡 -->
-    <dubbo:protocol host="localhost" port="20880"/>
+    <dubbo:protocol host="192.168.1.229" port="20880"/>
 
     <!--暴露服务 -->
     <bean id="carService" class="com.kaishengit.serviceimpl.CarServiceImpl"/>
     <bean id="checkOrderService" class="com.kaishengit.serviceimpl.CheckOrderServiceImpl"/>
     <bean id="employeeService" class="com.kaishengit.serviceimpl.EmployeeServiceImpl"/>
-    <bean id="fixOrderService" class="com.kaishengit.serviceimpl.FixOrderServiceImpl"/>
-    <bean id="orderService" class="com.kaishengit.serviceimpl.OrderServiceImpl"/>
+    <bean id="fixOrderServiceImpl" class="com.kaishengit.serviceimpl.FixOrderServiceImpl"/>
+    <bean id="orderServiceImpl" class="com.kaishengit.serviceimpl.OrderServiceImpl"/>
     <bean id="partsService" class="com.kaishengit.serviceimpl.PartsServiceImpl"/>
     <bean id="permissionService" class="com.kaishengit.serviceimpl.PermissionServiceImpl"/>
     <bean id="roleService" class="com.kaishengit.serviceimpl.RoleServiceImpl"/>
@@ -26,8 +26,8 @@
     <dubbo:service interface="com.kaishengit.service.CarService" ref="carService"/>
     <dubbo:service interface="com.kaishengit.service.CheckOrderService" ref="checkOrderService"/>
     <dubbo:service interface="com.kaishengit.service.EmployeeService" ref="employeeService"/>
-    <dubbo:service interface="com.kaishengit.service.FixOrderService" ref="fixOrderService"/>
-    <dubbo:service interface="com.kaishengit.service.OrderService" ref="orderService"/>
+    <dubbo:service interface="com.kaishengit.service.FixOrderService" ref="fixOrderServiceImpl"/>
+    <dubbo:service interface="com.kaishengit.service.OrderService" ref="orderServiceImpl"/>
     <dubbo:service interface="com.kaishengit.service.PartsService" ref="partsService"/>
     <dubbo:service interface="com.kaishengit.service.PermissionService" ref="permissionService"/>
     <dubbo:service interface="com.kaishengit.service.RoleService" ref="roleService"/>
