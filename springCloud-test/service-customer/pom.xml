@@ -46,6 +46,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--ribbon-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-ribbon</artifactId>
+        </dependency>
+        <!--feign-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-feign</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>
