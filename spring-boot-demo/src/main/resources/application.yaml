@@ -1,0 +1,58 @@
+spring:
+  profiles:
+    active: dev2
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql:///mydb6
+    username: root
+    password: czh
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+  #  spring-data-redis
+  redis:
+    host: 192.168.0.10
+    port: 6379
+    pool:
+      max-active: 8
+      min-idle: 2
+      max-wait: 5000
+  #  redisson的redis
+  redisson:
+    address: redis://192.168.0.10:6379
+    timeout: 3000
+  #  消息队列
+  activemq:
+    broker-url: tcp://localhost:61616
+  jms:
+    listener:
+      acknowledge-mode: client
+      concurrency: 3
+      max-concurrency: 10
+  #  ehcache
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
+# mybatis
+mybatis:
+  type-aliases-package: com.kaishengit.entity
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+# 日志：为部分包或类定义特殊的策略，也可以使用xml文件
+logging:
+  level:
+    com:
+      kaishengit:
+        mapper: debug
+  path: F:/temp/log
+#  分页
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+redis:
+  expires:
+    product: 10

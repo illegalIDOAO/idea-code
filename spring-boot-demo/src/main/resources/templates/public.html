@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <div id="header" th:fragment="header">
+        <h1>this is heater</h1>
+    </div>
+    <div id="header2">
+        <h1>this is heater too</h1>
+    </div>
+
+
+    <div th:fragment="foot(companyName)">
+        <h1>this is foot,@[[${companyName}]]</h1>
+    </div>
+
+
+</body>
+</html>

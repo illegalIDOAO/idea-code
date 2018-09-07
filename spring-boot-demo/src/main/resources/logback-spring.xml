@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--自定義的日志策略-->
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="com.kaishengit.jmsActiveMQ" level="DEBUG"/>
+</configuration>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>hello</h1>
+
+    <div th:include="public::header"></div>
+    <div th:include="~{public::header}"></div>
+    <div th:insert="~{public::header}"></div>
+    <div th:replace="~{public::header}"></div>
+
+    <div th:include="~{public::#header}"></div>
+    <div th:include="~{public::#header2}"></div>
+
+
+    <div th:include="public::foot(凯盛)"></div>
+</body>
+</html>

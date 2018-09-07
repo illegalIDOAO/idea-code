@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">总标题</title>
+    <script src="/js/jquery.min.js"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div id="header">
+        <h1>header</h1>
+    </div>
+
+    <div layout:fragment="content"></div>
+
+    <div layout:fragment="foot">
+        <h2>foot</h2>
+    </div>
+
+    <script layout:fragment="js"></script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>hello,SpringBoot</h1>
+
+    <h2>hello,[[${name}]]</h2>
+    <h2 th:inline="none">[[1, 2, 3], [4, 5]]</h2>
+    <h2 th:text="${name}">name</h2>
+
+    <h3 th:if="${id == 1001}" th:text="${name + '-->' + id}">name --> id</h3>
+    <h3 th:if="${id == '1001'}" th:text="${name + '-->' + id}">name --> id</h3>
+
+    <th:block th:if="${id==1001}">
+        <h5>id=1001</h5>
+    </th:block>
+
+    <h2 th:text="${#calendars.format(time)}"></h2>
+    <h2 th:text="${#calendars.format(time,'YYYY-MM-DD')}"></h2>
+    <h2 th:text="${#calendars.format(time,'YYYY-MM-DD HH:mm:ss')}"></h2>
+    <h2 th:text="${#numbers.formatCurrency(num)}"></h2>
+    <h2 th:text="${#numbers.formatInteger(num,0)}"></h2>
+    <h2 th:text="${#numbers.formatInteger(num,0,'COMMA')}"></h2>
+    <h2 th:text="${#numbers.formatDecimal(num1,1,8)}"></h2>
+
+
+    <ul>
+        <li th:if="${#lists.isEmpty(tools)}">暂无数据</li>
+        <li th:each="tool,iterStat : ${toolList}" th:text="${iterStat + ',' + tool}">tool</li>
+    </ul>
+
+    <a th:href="@{/user/{id}/index(id=${id})}">跳转1</a>
+    <a th:href="@{/user/index(id=${id})}">跳转2</a>
+    <a th:href="@{/user/{id}/index(id=${id},p=${id})}">跳转3</a>
+    <a th:href="@{/tryPublic}">跳转4</a>
+    <a th:href="@{/}">跳转5</a>
+
+</body>
+</html>
