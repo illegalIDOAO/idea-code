@@ -11,7 +11,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class AopTestCase {
 
     @Test
-    public void testAopJd(){
+    public void testAopJdk(){
         ApplicationContext context = new ClassPathXmlApplicationContext("spring-aop.xml");
         Sale sale = (Sale)context.getBean("xiaomi");
         System.out.println("-----------");
